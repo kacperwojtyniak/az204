@@ -54,10 +54,11 @@ namespace az204api.Controllers
             return Ok();
         }
 
-        [HttpDelete("{coffeeId}")]
-        public IActionResult Delete(string coffeeId)
+        [HttpDelete("{coffeeId}/{roaster}")]
+        public async Task<IActionResult> Delete(string coffeeId, string roaster)
         {
-            throw new NotImplementedException();
+            await container.DeleteItemAsync<CoffeeModel>(coffeeId, new PartitionKey(roaster));
+            return Ok();
         }
     }
 }
