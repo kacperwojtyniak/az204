@@ -26,7 +26,7 @@ namespace az204api
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     var localConfig = config.Build();                    
-                    var vaultUrl = localConfig.GetValue<string>(nameof(Configuration.KeyVaultUrl));
+                    var vaultUrl = localConfig.GetValue<string>(nameof(Config.KeyVaultUrl));
                     config.AddAzureKeyVault(vaultUrl);
                 });
     }
