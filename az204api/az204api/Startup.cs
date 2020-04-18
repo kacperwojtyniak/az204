@@ -28,6 +28,15 @@ namespace az204api
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 });
             services.AddSwaggerDocument();
+
+            services.AddSingleton<CosmosClient>(service =>
+            {
+                var conn = Configuration.GetValue<string>(nameof(Config.CosmosDbConnString));
+                var options = new CosmosClientOptions();
+                options.SerializerOptions = new CosmosSerializationOptions() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase };
+                var client = new CosmosClient(conn, options);
+                return client;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
