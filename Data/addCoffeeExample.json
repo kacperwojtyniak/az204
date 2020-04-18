@@ -1,0 +1,20 @@
+[
+    {
+        "roastery": "Hayb",
+        "origin": "Peru",
+        "region": "El Paraiso",
+        "altitudeMin": 1950,
+        "altitudeMax": 2000,
+        "process": "Red Honey",
+        "brewingMethod": "filter"
+    },
+    {
+        "roastery": "Populus",
+        "origin": "Nicaragua",
+        "region": "Nueva Segovia",
+        "altitudeMin": 0,
+        "altitudeMax": 0,
+        "process": "Washed",
+        "brewingMethod": "espresso"
+    }
+]
