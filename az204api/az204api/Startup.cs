@@ -1,7 +1,8 @@
 using az204api.Models;
+using Azure.Cosmos;
+using Azure.Cosmos.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,57 +10,57 @@ using System.Text.Json;
 
 namespace az204api
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+	public class Startup
+	{
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-        public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                });
-            services.AddSwaggerDocument();
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddControllers()
+				.AddJsonOptions(options =>
+				{
+					options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+					options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+				});
+			services.AddSwaggerDocument();
 
-            services.AddSingleton<CosmosClient>(service =>
-            {
-                var conn = Configuration.GetValue<string>(nameof(Config.CosmosDbConnString));
-                var options = new CosmosClientOptions();
-                options.SerializerOptions = new CosmosSerializationOptions() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase };
-                var client = new CosmosClient(conn, options);
-                return client;
-            });
-        }
+			services.AddSingleton<CosmosClient>(service =>
+			{
+				var conn = Configuration.GetValue<string>(nameof(Config.CosmosDbConnString));
+				var options = new CosmosClientOptions();
+				options.SerializerOptions = new CosmosSerializationOptions() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase };
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+				return new CosmosClient(conn, options);
+			});
+		}
 
-            app.UseHttpsRedirection();
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
 
-            app.UseRouting();
+			app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+			app.UseRouting();
 
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
+			app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
-    }
+			app.UseOpenApi();
+			app.UseSwaggerUi3();
+
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllers();
+			});
+		}
+	}
 }
