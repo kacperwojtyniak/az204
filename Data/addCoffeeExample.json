@@ -16,5 +16,132 @@
         "altitudeMax": 0,
         "process": "Washed",
         "brewingMethod": "espresso"
+    },
+    {
+        "roastery": "Johan & Nyström",
+        "origin": "Blend",
+        "region": "N/A",
+        "altitudeMin": 0,
+        "altitudeMax": 0,
+        "process": "N/A",
+        "brewingMethod": "all"
+    },
+    {
+        "roastery": "Five Elephant",
+        "origin": "Ethiopia",
+        "region": "Uraga, Oriomia",
+        "altitudeMin": 2250,
+        "altitudeMax": 2300,
+        "process": "Natural",
+        "brewingMethod": "filter"
+    },
+    {
+        "roastery": "Tim Wenedelboe",
+        "origin": "Hondural",
+        "region": "Chinacla, La Paz",
+        "altitudeMin": 1500,
+        "altitudeMax": 1600,
+        "process": "Washed",
+        "brewingMethod": "filer"
+    },
+    {
+        "roastery": "3fe",
+        "origin": "Ethiopia",
+        "region": "Guji",
+        "altitudeMin": 0,
+        "altitudeMax": 0,
+        "process": "Washed",
+        "brewingMethod": "all"
+    },
+    {
+        "roastery": "SIMPLo",
+        "origin": "Whiopia",
+        "region": "Sidamo",
+        "altitudeMin": 1600,
+        "altitudeMax": 2000,
+        "process": "Washed",
+        "brewingMethod": "filter"
+    },
+    {
+        "roastery": "Caffenation",
+        "origin": "Peru",
+        "region": "N/A",
+        "altitudeMin": 2200,
+        "altitudeMax": 2200,
+        "process": "N/A",
+        "brewingMethod": "filter"
+    },
+    {
+        "roastery": "Casino Mocca",
+        "origin": "Salvador",
+        "region": "N/A",
+        "altitudeMin": 0,
+        "altitudeMax": 0,
+        "process": "Honey",
+        "brewingMethod": "filter"
+    },
+    {
+        "roastery": "Coffeelab",
+        "origin": "Guatemala",
+        "region": "Atitlan",
+        "altitudeMin": 1500,
+        "altitudeMax": 1900,
+        "process": "Washed",
+        "brewingMethod": "espresso"
+    },
+    {
+        "roastery": "Diamonds Roastery",
+        "origin": "Burundi",
+        "region": "Kayanza",
+        "altitudeMin": 1863,
+        "altitudeMax": 1863,
+        "process": "Natural",
+        "brewingMethod": "filter"
+    },
+    {
+        "roastery": "Diamonds Roastery",
+        "origin": "Nicaragua",
+        "region": "Jinotega",
+        "altitudeMin": 1500,
+        "altitudeMax": 1500,
+        "process": "Washed",
+        "brewingMethod": "filter"
+    },
+    {
+        "roastery": "Figa Coffee",
+        "origin": "Rwanda",
+        "region": "Western Province",
+        "altitudeMin": 1800,
+        "altitudeMax": 2000,
+        "process": "Washed",
+        "brewingMethod": "filter"
+    },
+    {
+        "roastery": "Figa Coffee",
+        "origin": "Rwanda",
+        "region": "Nyamasheke",
+        "altitudeMin": 1545,
+        "altitudeMax": 1545,
+        "process": "Natural",
+        "brewingMethod": "filter"
+    },
+    {
+        "roastery": "Gardelli Speciality Coffees",
+        "origin": "Ethiopia",
+        "region": "Yirgacheffe",
+        "altitudeMin": 1900,
+        "altitudeMax": 2100,
+        "process": "Washed",
+        "brewingMethod": "all"
+    },
+    {
+        "roastery": "Java Coffee",
+        "origin": "Tanzania",
+        "region": "Songwe, Mbozi",
+        "altitudeMin": 1702,
+        "altitudeMax": 1702,
+        "process": "Washed",
+        "brewingMethod": "filter"
     }
+    
 ]
