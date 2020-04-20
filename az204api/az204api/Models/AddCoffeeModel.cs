@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 namespace az204api.Models
 {
     public class AddCoffeeModel
-    {        
+    {
+        public string Name { get; set; }
         public string Roastery { get; set; }
         public string Origin { get; set; }
         public string Region { get; set; }

@@ -1,5 +1,6 @@
 [
     {
+        "name":"Peru Roberto Perales Perez",
         "roastery": "Hayb",
         "origin": "Peru",
         "region": "El Paraiso",
@@ -9,6 +10,7 @@
         "brewingMethod": "filter"
     },
     {
+        "name":"Nicaragua Nueva Segovia La Estrella",
         "roastery": "Populus",
         "origin": "Nicaragua",
         "region": "Nueva Segovia",
@@ -18,15 +20,7 @@
         "brewingMethod": "espresso"
     },
     {
-        "roastery": "Johan & Nyström",
-        "origin": "Blend",
-        "region": "N/A",
-        "altitudeMin": 0,
-        "altitudeMax": 0,
-        "process": "N/A",
-        "brewingMethod": "all"
-    },
-    {
+        "name": "Ethiopia Uraga Natural",
         "roastery": "Five Elephant",
         "origin": "Ethiopia",
         "region": "Uraga, Oriomia",
@@ -36,8 +30,9 @@
         "brewingMethod": "filter"
     },
     {
-        "roastery": "Tim Wenedelboe",
-        "origin": "Hondural",
+        "name" : "Honduras Caballero Catuai",
+        "roastery": "Tim Wendelboe",
+        "origin": "Honduras",
         "region": "Chinacla, La Paz",
         "altitudeMin": 1500,
         "altitudeMax": 1600,
@@ -45,6 +40,7 @@
         "brewingMethod": "filer"
     },
     {
+        "name":"Ethiopia Ana Sora Washed",
         "roastery": "3fe",
         "origin": "Ethiopia",
         "region": "Guji",
@@ -54,8 +50,9 @@
         "brewingMethod": "all"
     },
     {
+        "name":"Etiopia Ora Filter",
         "roastery": "SIMPLo",
-        "origin": "Whiopia",
+        "origin": "Ethiopia",
         "region": "Sidamo",
         "altitudeMin": 1600,
         "altitudeMax": 2000,
@@ -63,6 +60,7 @@
         "brewingMethod": "filter"
     },
     {
+        "name" : "FIL Peru Junin Guillermo Cardenas",
         "roastery": "Caffenation",
         "origin": "Peru",
         "region": "N/A",
@@ -72,6 +70,7 @@
         "brewingMethod": "filter"
     },
     {
+        "name" : "El Salvador Ismael Recinos",
         "roastery": "Casino Mocca",
         "origin": "Salvador",
         "region": "N/A",
@@ -81,6 +80,7 @@
         "brewingMethod": "filter"
     },
     {
+        "name" : "Gwatemala Atitlan Ija'tz de la Gente",
         "roastery": "Coffeelab",
         "origin": "Guatemala",
         "region": "Atitlan",
@@ -90,6 +90,7 @@
         "brewingMethod": "espresso"
     },
     {
+        "name" : "Burundi Kibingo Natural",
         "roastery": "Diamonds Roastery",
         "origin": "Burundi",
         "region": "Kayanza",
@@ -99,6 +100,7 @@
         "brewingMethod": "filter"
     },
     {
+        "name":"Nicaragua Don Isidro",
         "roastery": "Diamonds Roastery",
         "origin": "Nicaragua",
         "region": "Jinotega",
@@ -108,6 +110,7 @@
         "brewingMethod": "filter"
     },
     {
+        "name":"Rwanda Kageyo Lot 080",
         "roastery": "Figa Coffee",
         "origin": "Rwanda",
         "region": "Western Province",
@@ -117,6 +120,7 @@
         "brewingMethod": "filter"
     },
     {
+        "name":"Rwanda Kirambo Lot 435",
         "roastery": "Figa Coffee",
         "origin": "Rwanda",
         "region": "Nyamasheke",
@@ -126,6 +130,7 @@
         "brewingMethod": "filter"
     },
     {
+        "name" : "Ethiopia Banko Gotiti",
         "roastery": "Gardelli Speciality Coffees",
         "origin": "Ethiopia",
         "region": "Yirgacheffe",
@@ -135,6 +140,7 @@
         "brewingMethod": "all"
     },
     {
+        "name":"Tanzania Iyula",
         "roastery": "Java Coffee",
         "origin": "Tanzania",
         "region": "Songwe, Mbozi",
