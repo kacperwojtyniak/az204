@@ -25,6 +25,29 @@ namespace az204api.Controllers
             _logger = logger;
         }
 
+        [HttpGet("roasters")]
+        public async Task<QueryResult> GetAllRoasters([FromQuery]string continuationToken = default(string))
+        {
+            try
+            {
+                var query = $"select distinct c.roastery from c";
+                if (!string.IsNullOrEmpty(continuationToken))
+                {
+                    var tokenBytes = Convert.FromBase64String(continuationToken);
+                    continuationToken = UTF8Encoding.UTF8.GetString(tokenBytes);
+                }
+
+                var iterator = container.GetItemQueryIterator<CoffeeModel>(query, continuationToken);
+                var result = await iterator.ReadNextAsync();
+                return new QueryResult(null, result, result.RequestCharge);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get roasters");
+                throw;
+            }
+
+        }
         [HttpGet("roastery/{roastery}")]
         public async Task<QueryResult> Get(string roastery, [FromQuery]string continuationToken = default(string))
         {
