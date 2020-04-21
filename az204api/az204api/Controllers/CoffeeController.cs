@@ -25,20 +25,13 @@ namespace az204api.Controllers
             _logger = logger;
         }
 
-        [HttpGet("{roastery}")]
+        [HttpGet("roastery/{roastery}")]
         public async Task<QueryResult> Get(string roastery, [FromQuery]string continuationToken = default(string))
         {
             try
             {
-                if (!string.IsNullOrEmpty(continuationToken))
-                {
-                    var tokenBytes = Convert.FromBase64String(continuationToken);
-                    continuationToken = UTF8Encoding.UTF8.GetString(tokenBytes);
-                }
-                var query = $"select * from c where c.roastery = '{roastery}'";                
-                var iterator = container.GetItemQueryIterator<CoffeeModel>(query, continuationToken);
-                var result = await iterator.ReadNextAsync();                
-                return new QueryResult(result.ContinuationToken, result, result.RequestCharge);
+                var query = $"select * from c where c.roastery = '{roastery}'";
+                return await QueryAsync(query, continuationToken);
             }
             catch (Exception ex)
             {
@@ -46,6 +39,50 @@ namespace az204api.Controllers
                 throw;
             }            
         }
+        [HttpGet("brewing/{brewingMethod}")]
+        public async Task<QueryResult> GetByBrewingMethod(string brewingMethod, [FromQuery]string continuationToken = default(string))
+        {
+            try
+            {
+                var query = $"select * from c where c.brewingMethod = '{brewingMethod}'";
+                return await QueryAsync(query, continuationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get coffes");
+                throw;
+            }
+        }
+        [HttpGet("origin/{origin}")]
+        public async Task<QueryResult> GetByOrigin(string origin, [FromQuery]string continuationToken = default(string))
+        {
+            try
+            {
+                var query = $"select * from c where c.origin = '{origin}'";
+                return await QueryAsync(query, continuationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get coffes");
+                throw;
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<QueryResult> GetById(string id)
+        {
+            try
+            {
+                var query = $"select * from c where c.id = '{id}'";                
+                return await QueryAsync(query, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get coffes");
+                throw;
+            }
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody]AddCoffeeModel coffee)
@@ -59,6 +96,19 @@ namespace az204api.Controllers
         {
             await container.DeleteItemAsync<CoffeeModel>(coffeeId, new PartitionKey(roaster));
             return Ok();
+        }
+
+        private async Task<QueryResult> QueryAsync(string query, string continuationToken)
+        {
+            if (!string.IsNullOrEmpty(continuationToken))
+            {
+                var tokenBytes = Convert.FromBase64String(continuationToken);
+                continuationToken = UTF8Encoding.UTF8.GetString(tokenBytes);
+            }
+
+            var iterator = container.GetItemQueryIterator<CoffeeModel>(query, continuationToken);
+            var result = await iterator.ReadNextAsync();
+            return new QueryResult(result.ContinuationToken, result, result.RequestCharge);
         }
     }
 }
