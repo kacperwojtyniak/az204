@@ -21,3 +21,4 @@ Get coffee by ID: 2,89
 Get coffees from given roaster: 3,18
 Get for brewingMethod: 3,22
 Get by origin: 3,05
+Get distinct roasters: 96,59
