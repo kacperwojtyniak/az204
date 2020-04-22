@@ -11,10 +11,10 @@ namespace az204functions
     {
         [FunctionName("Function1")]
         public static void Run([CosmosDBTrigger(
-            databaseName: "databaseName",
-            collectionName: "collectionName",
-            ConnectionStringSetting = "",
-            LeaseCollectionName = "leases")]IReadOnlyList<Document> input, ILogger log)
+            databaseName: "%databaseName%",
+            collectionName: "%collectionName%",
+            ConnectionStringSetting = "connectionString",
+            CreateLeaseCollectionIfNotExists = true)]IReadOnlyList<Document> input, ILogger log)
         {
             if (input != null && input.Count > 0)
             {
