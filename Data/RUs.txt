@@ -22,3 +22,14 @@ Get coffee by ID: 2,89
 Get coffees from given roaster: 3,18
 Get for brewingMethod: 3,22
 Get by origin: 3,05
+
+--------------------------------------------------------------------------------------------
+V2
+Two containers
+Coffees partitionKey: /roastery
+CoffeesBrewing partitionKey: /brewingMethod
+
+Get coffee by ID: 2,89
+Get coffees from given roaster: 3,18
+Get for brewingMethod: 44,97 - still the same charge. I didn't understand something. (Same for 'select * from c' with partition key provided)
+Get by origin: 3,05
