@@ -22,3 +22,13 @@ Set-AzCosmosDBSqlDatabase `
     -Name $containerName `
     -PartitionKeyKind Hash `
     -PartitionKeyPath $partitionKeyPath
+
+
+    #Create container for coffees partitioned by 
+    Set-AzCosmosDBSqlContainer `
+    -ResourceGroupName $resourceGroupName `
+    -AccountName $accountName `
+    -DatabaseName $databaseName `
+    -Name 'CoffeesBrewing' `
+    -PartitionKeyKind Hash `
+    -PartitionKeyPath '/brewingMethod'
