@@ -15,13 +15,14 @@ namespace az204api.Controllers
     public class CoffeeController : ControllerBase
     {
         private const string DATABASE_ID = "Az204";
-        private const string CONTAINER_ID = "Coffees";
-        private readonly Container container;
+        private const string COFFEES_CONTAINER = "Coffees";
+        private const string COFFEESBREWING_CONTAINER = "CoffeesBrewing";
+        private readonly CosmosClient client;
         private readonly ILogger<CoffeeController> _logger;
 
         public CoffeeController(CosmosClient client, ILogger<CoffeeController> logger)
         {
-            this.container = client.GetContainer(DATABASE_ID, CONTAINER_ID);
+            this.client = client;
             _logger = logger;
         }
 
@@ -36,7 +37,7 @@ namespace az204api.Controllers
                     var tokenBytes = Convert.FromBase64String(continuationToken);
                     continuationToken = UTF8Encoding.UTF8.GetString(tokenBytes);
                 }
-
+                var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
                 var iterator = container.GetItemQueryIterator<CoffeeModel>(query, continuationToken);
                 var result = await iterator.ReadNextAsync();
                 return new QueryResult(null, result, result.RequestCharge);
@@ -54,7 +55,8 @@ namespace az204api.Controllers
             try
             {
                 var query = $"select * from c where c.roastery = '{roastery}'";
-                return await QueryAsync(query, continuationToken: continuationToken);
+                var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
+                return await QueryAsync(query, container, continuationToken: continuationToken);
             }
             catch (Exception ex)
             {
@@ -67,8 +69,9 @@ namespace az204api.Controllers
         {
             try
             {
-                var query = $"select * from c where c.brewingMethod = '{brewingMethod}'";
-                return await QueryAsync(query, partitionKey, continuationToken);
+                var query = $"select * from c";
+                var container = client.GetContainer(DATABASE_ID, COFFEESBREWING_CONTAINER);
+                return await QueryAsync(query, container, partitionKey, continuationToken);
             }
             catch (Exception ex)
             {
@@ -82,7 +85,8 @@ namespace az204api.Controllers
             try
             {
                 var query = $"select * from c where c.origin = '{origin}'";
-                return await QueryAsync(query, partitionKey, continuationToken);
+                var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
+                return await QueryAsync(query, container, partitionKey, continuationToken);
             }
             catch (Exception ex)
             {
@@ -96,8 +100,9 @@ namespace az204api.Controllers
         {
             try
             {
-                var query = $"select * from c where c.id = '{id}'";                
-                return await QueryAsync(query);
+                var query = $"select * from c where c.id = '{id}'";
+                var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
+                return await QueryAsync(query, container);
             }
             catch (Exception ex)
             {
@@ -110,6 +115,7 @@ namespace az204api.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody]AddCoffeeModel coffee)
         {
+            var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
             await container.CreateItemAsync(CoffeeModel.Create(coffee), new PartitionKey(coffee.Roastery));
             return Ok();
         }
@@ -117,11 +123,12 @@ namespace az204api.Controllers
         [HttpDelete("{coffeeId}/{roaster}")]
         public async Task<IActionResult> Delete(string coffeeId, string roaster)
         {
+            var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
             await container.DeleteItemAsync<CoffeeModel>(coffeeId, new PartitionKey(roaster));
             return Ok();
         }
 
-        private async Task<QueryResult> QueryAsync(string query, string partitionKey = null, string continuationToken = null)
+        private async Task<QueryResult> QueryAsync(string query,Container container, string partitionKey = null, string continuationToken = null)
         {
             var queryOptions = string.IsNullOrEmpty(partitionKey) ? null : new QueryRequestOptions() { PartitionKey = new PartitionKey(partitionKey) };
             if (!string.IsNullOrEmpty(continuationToken))
@@ -129,8 +136,7 @@ namespace az204api.Controllers
                 var tokenBytes = Convert.FromBase64String(continuationToken);
                 continuationToken = UTF8Encoding.UTF8.GetString(tokenBytes);
             }
-
-
+            
             var iterator = container.GetItemQueryIterator<CoffeeModel>(query, continuationToken, queryOptions);
             var result = await iterator.ReadNextAsync();
             return new QueryResult(result.ContinuationToken, result, result.RequestCharge);
