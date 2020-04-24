@@ -120,6 +120,14 @@ namespace az204api.Controllers
             return Ok();
         }
 
+        [HttpPost("update")]
+        public async Task<IActionResult> Update([FromBody]CoffeeModel coffee)
+        {
+            var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
+            await container.UpsertItemAsync(coffee, new PartitionKey(coffee.Roastery));
+            return Ok();
+        }
+
         [HttpDelete("{coffeeId}/{roaster}")]
         public async Task<IActionResult> Delete(string coffeeId, string roaster)
         {
