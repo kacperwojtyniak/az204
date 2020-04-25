@@ -15,6 +15,7 @@ namespace az204api.Models
         public int AltitudeMax { get; set; }
         public string Process { get; set; }
         public string BrewingMethod { get; set; }
+        public decimal UnitPrice { get; set; }
 
         public static CoffeeModel Create(AddCoffeeModel coffee)
         {
@@ -27,7 +28,8 @@ namespace az204api.Models
                 AltitudeMax = coffee.AltitudeMax,
                 AltitudeMin = coffee.AltitudeMin,
                 Process = coffee.Process,
-                BrewingMethod = coffee.BrewingMethod
+                BrewingMethod = coffee.BrewingMethod,
+                UnitPrice = coffee.UnitPrice
             };
         }
     }

@@ -15,5 +15,6 @@ namespace az204api.Models
         public int AltitudeMax { get; set; }
         public string Process { get; set; }
         public string BrewingMethod { get; set; }
+        public decimal UnitPrice { get; set; }
     }
 }
