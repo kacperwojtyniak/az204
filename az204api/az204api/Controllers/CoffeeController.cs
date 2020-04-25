@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using static az204api.Constants;
 
 namespace az204api.Controllers
 {
@@ -14,9 +15,7 @@ namespace az204api.Controllers
     [Route("[controller]")]
     public class CoffeeController : ControllerBase
     {
-        private const string DATABASE_ID = "Az204";
-        private const string COFFEES_CONTAINER = "Coffees";
-        private const string COFFEESBREWING_CONTAINER = "CoffeesBrewing";
+        
         private readonly CosmosClient client;
         private readonly ILogger<CoffeeController> _logger;
 
