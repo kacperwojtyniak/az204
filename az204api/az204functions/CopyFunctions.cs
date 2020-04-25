@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using az204functions.Models;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace az204functions
 {
-    public class Function1
+    public class CopyFunctions
     {
         [FunctionName("CopyToCoffeesBrewing")]
         public async Task CopyToCoffeesBrewing([CosmosDBTrigger(
@@ -43,14 +46,14 @@ namespace az204functions
         {
             var outputCollection = Environment.GetEnvironmentVariable("outputCollectionOrigin");
             await Copy(input, client, outputCollection);
-        }
+        }        
 
         private async Task Copy(IReadOnlyList<Document> input, DocumentClient client, string outputCollection)
         {
             var databaseName = Environment.GetEnvironmentVariable("databaseName");
             var collectionUri = UriFactory.CreateDocumentCollectionUri(databaseName, outputCollection);
             foreach (var coffee in input)
-            {
+            {                
                 await client.UpsertDocumentAsync(collectionUri, coffee);
             }
         }
