@@ -7,7 +7,8 @@
         "altitudeMin": 1950,
         "altitudeMax": 2000,
         "process": "Red Honey",
-        "brewingMethod": "filter"
+        "brewingMethod": "filter",
+        "unitPrice": 51
     },
     {
         "name":"Nicaragua Nueva Segovia La Estrella",
@@ -17,7 +18,8 @@
         "altitudeMin": 0,
         "altitudeMax": 0,
         "process": "Washed",
-        "brewingMethod": "espresso"
+        "brewingMethod": "espresso",
+        "unitPrice": 49
     },
     {
         "name": "Ethiopia Uraga Natural",
@@ -27,7 +29,8 @@
         "altitudeMin": 2250,
         "altitudeMax": 2300,
         "process": "Natural",
-        "brewingMethod": "filter"
+        "brewingMethod": "filter",
+        "unitPrice": 47
     },
     {
         "name" : "Honduras Caballero Catuai",
@@ -37,7 +40,8 @@
         "altitudeMin": 1500,
         "altitudeMax": 1600,
         "process": "Washed",
-        "brewingMethod": "filer"
+        "brewingMethod": "filer",
+        "unitPrice": 43
     },
     {
         "name":"Ethiopia Ana Sora Washed",
@@ -47,7 +51,8 @@
         "altitudeMin": 0,
         "altitudeMax": 0,
         "process": "Washed",
-        "brewingMethod": "all"
+        "brewingMethod": "all",
+        "unitPrice": 44
     },
     {
         "name":"Etiopia Ora Filter",
@@ -57,7 +62,8 @@
         "altitudeMin": 1600,
         "altitudeMax": 2000,
         "process": "Washed",
-        "brewingMethod": "filter"
+        "brewingMethod": "filter",
+        "unitPrice": 46
     },
     {
         "name" : "FIL Peru Junin Guillermo Cardenas",
@@ -67,7 +73,8 @@
         "altitudeMin": 2200,
         "altitudeMax": 2200,
         "process": "N/A",
-        "brewingMethod": "filter"
+        "brewingMethod": "filter",
+        "unitPrice": 54
     },
     {
         "name" : "El Salvador Ismael Recinos",
@@ -77,7 +84,8 @@
         "altitudeMin": 0,
         "altitudeMax": 0,
         "process": "Honey",
-        "brewingMethod": "filter"
+        "brewingMethod": "filter",
+        "unitPrice": 38
     },
     {
         "name" : "Gwatemala Atitlan Ija'tz de la Gente",
@@ -87,7 +95,8 @@
         "altitudeMin": 1500,
         "altitudeMax": 1900,
         "process": "Washed",
-        "brewingMethod": "espresso"
+        "brewingMethod": "espresso",
+        "unitPrice": 60
     },
     {
         "name" : "Burundi Kibingo Natural",
@@ -97,7 +106,8 @@
         "altitudeMin": 1863,
         "altitudeMax": 1863,
         "process": "Natural",
-        "brewingMethod": "filter"
+        "brewingMethod": "filter",
+        "unitPrice": 52
     },
     {
         "name":"Nicaragua Don Isidro",
@@ -107,7 +117,8 @@
         "altitudeMin": 1500,
         "altitudeMax": 1500,
         "process": "Washed",
-        "brewingMethod": "filter"
+        "brewingMethod": "filter",
+        "unitPrice": 42
     },
     {
         "name":"Rwanda Kageyo Lot 080",
@@ -117,7 +128,8 @@
         "altitudeMin": 1800,
         "altitudeMax": 2000,
         "process": "Washed",
-        "brewingMethod": "filter"
+        "brewingMethod": "filter",
+        "unitPrice": 47
     },
     {
         "name":"Rwanda Kirambo Lot 435",
@@ -127,7 +139,8 @@
         "altitudeMin": 1545,
         "altitudeMax": 1545,
         "process": "Natural",
-        "brewingMethod": "filter"
+        "brewingMethod": "filter",
+        "unitPrice": 55
     },
     {
         "name" : "Ethiopia Banko Gotiti",
@@ -137,7 +150,8 @@
         "altitudeMin": 1900,
         "altitudeMax": 2100,
         "process": "Washed",
-        "brewingMethod": "all"
+        "brewingMethod": "all",
+        "unitPrice": 48
     },
     {
         "name":"Tanzania Iyula",
@@ -147,7 +161,8 @@
         "altitudeMin": 1702,
         "altitudeMax": 1702,
         "process": "Washed",
-        "brewingMethod": "filter"
+        "brewingMethod": "filter",
+        "unitPrice": 50
     }
     
 ]

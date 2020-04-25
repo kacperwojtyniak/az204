@@ -22,6 +22,7 @@ ForEach($origin in $origins)
             altitudeMax = Get-Random -Minimum 1201 -Maximum 1850;
             process = "Washed", "Natural" | Get-Random;
             brewingMethod = "filter", "espresso", "all" | Get-Random;
+            unitPrice = Get-Random -Minimum 40 - -Maximum 60
         }
          $json = $coffee | ConvertTo-Json
          Invoke-WebRequest -Uri $url -Method POST -Body $json -ContentType "application/json"
