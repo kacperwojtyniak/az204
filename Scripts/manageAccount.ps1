@@ -24,7 +24,7 @@ Set-AzCosmosDBSqlDatabase `
     -PartitionKeyPath $partitionKeyPath
 
 
-    #Create container for coffees partitioned by 
+    #Create container for coffees partitioned by brewingMethod
     Set-AzCosmosDBSqlContainer `
     -ResourceGroupName $resourceGroupName `
     -AccountName $accountName `
@@ -32,3 +32,21 @@ Set-AzCosmosDBSqlDatabase `
     -Name 'CoffeesBrewing' `
     -PartitionKeyKind Hash `
     -PartitionKeyPath '/brewingMethod'
+
+    #Create container for coffees partitioned by  origin
+    Set-AzCosmosDBSqlContainer `
+    -ResourceGroupName $resourceGroupName `
+    -AccountName $accountName `
+    -DatabaseName $databaseName `
+    -Name 'CoffeesOrigin' `
+    -PartitionKeyKind Hash `
+    -PartitionKeyPath '/origin'
+
+    #Create container for orders partitioned by date
+    Set-AzCosmosDBSqlContainer `
+    -ResourceGroupName $resourceGroupName `
+    -AccountName $accountName `
+    -DatabaseName $databaseName `
+    -Name 'Orders' `
+    -PartitionKeyKind Hash `
+    -PartitionKeyPath '/date'
