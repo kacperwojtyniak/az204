@@ -4,7 +4,7 @@ $databaseName = "Az204"
 $databaseRUs = 400
 $containerName = "Coffees"
 $partitionKeyPath = "/roastery"
-
+Import-Module Az.CosmosDB
 Connect-AzAccount
 
 # Create DB
@@ -50,3 +50,13 @@ Set-AzCosmosDBSqlDatabase `
     -Name 'Orders' `
     -PartitionKeyKind Hash `
     -PartitionKeyPath '/date'
+
+    #Register stored procedure
+    $procedure = Get-Content '.\Scripts\approveStoredProcedure.js' -Raw
+    Set-AzCosmosDBSqlStoredProcedure `
+   -ResourceGroupName $resourceGroupName `
+   -AccountName $accountName `
+   -DatabaseName $databaseName `
+   -ContainerName 'Orders' `
+   -Name 'approveOrder' `
+   -Body  $procedure
