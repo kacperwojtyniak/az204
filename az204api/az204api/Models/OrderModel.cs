@@ -10,7 +10,7 @@ namespace az204api.Models
         public string Id { get; set; }
         public string Date { get; set; }
         public decimal TotalAmount { get; set; }
-        public string Status { get; set; } = "Pending";
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public IEnumerable<OrderItem> Items { get; set; }
         public OrderModel()
         {

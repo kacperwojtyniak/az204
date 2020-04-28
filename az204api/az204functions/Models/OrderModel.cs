@@ -7,7 +7,7 @@ namespace az204functions.Models
         public string Id { get; set; }
         public string Date { get; set; }
         public decimal TotalAmount { get; set; }
-        public string Status { get; set; }
+        public OrderStatus Status { get; set; }
         public IEnumerable<OrderItem> Items { get; set; }
     }
 }

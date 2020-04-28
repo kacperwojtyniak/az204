@@ -60,12 +60,12 @@ namespace az204functions
 				timeoutCts.Cancel();
 				if (approvalEvent.Result.Approved)
 				{
-					input.Status = "Approved";
+					input.Status = OrderStatus.Approved;
 					await context.CallActivityAsync<OrderModel>("SetStatus", input);
 					return;
 				};
 			}
-			input.Status = "Rejected";
+			input.Status = OrderStatus.Rejected;
 			await context.CallActivityAsync<OrderModel>("SetStatus", input);
 
 		}
