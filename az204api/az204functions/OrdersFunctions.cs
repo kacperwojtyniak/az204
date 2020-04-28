@@ -40,14 +40,13 @@ namespace az204functions
 			var orderId = req.Query["id"][0];
 			var date = req.Query["date"][0];
 			await starter.StartNewAsync<OrderModel>("WaitForOrderApproval", input: new OrderModel (){ Id = orderId, Date = date });
-
 		}
 
 		[FunctionName("WaitForOrderApproval")]
 		public async Task WaitForOrderApproval([OrchestrationTrigger]IDurableOrchestrationContext context)
 		{
 			var input = context.GetInput<OrderModel>();
-			await context.CallActivityAsync<OrderModel>("SendApprovalRequest", input); // Send email/sms whatever. Right now just add to table
+			await context.CallActivityAsync("SendApprovalRequest", input); // Send email/sms whatever. Right now just add to table
 
 			using var timeoutCts = new CancellationTokenSource();
 			DateTime dueTime = context.CurrentUtcDateTime.AddMinutes(5);
@@ -61,12 +60,12 @@ namespace az204functions
 				if (approvalEvent.Result.Approved)
 				{
 					input.Status = OrderStatus.Approved;
-					await context.CallActivityAsync<OrderModel>("SetStatus", input);
+					await context.CallActivityAsync("SetStatus", input);
 					return;
 				};
 			}
 			input.Status = OrderStatus.Rejected;
-			await context.CallActivityAsync<OrderModel>("SetStatus", input);
+			await context.CallActivityAsync("SetStatus", input);
 
 		}
 		
@@ -74,13 +73,13 @@ namespace az204functions
 		public void SendApprovalRequest([ActivityTrigger] IDurableActivityContext helloContext, [CosmosDB(
 				databaseName: "%databaseName%",
 				collectionName: "%ordersCollection%",
-				ConnectionStringSetting = "connectionString")]out dynamic document)
+				ConnectionStringSetting = "connectionString")]out ApprovalModel document)
 		{
 			// Should send email/sms/some notification. Now just adding a document to collecion
-			var orderId = helloContext.GetInput<OrderModel>().Id;
+			var order = helloContext.GetInput<OrderModel>();
 			var hostname = Environment.GetEnvironmentVariable("WEBSITE_HOSTNAME");
 			var url = $"http://{hostname}/runtime/webhooks/durabletask/instances/{helloContext.InstanceId}/raiseEvent/ApprovalEvent";
-			document = new { date = DateTime.UtcNow.ToShortDateString(), url = url, type = "Approval", status = "pending", orderId = orderId };
+			document = new ApprovalModel() { Date = DateTime.UtcNow.ToShortDateString(), Url = url, OrderId = order.Id};
 		}
 
 		[FunctionName("SetStatus")]
@@ -92,8 +91,8 @@ namespace az204functions
 			var input = context.GetInput<OrderModel>();
 			var databaseName = Environment.GetEnvironmentVariable("databaseName");
 			var collection = Environment.GetEnvironmentVariable("ordersCollection");
-			var procedure = UriFactory.CreateStoredProcedureUri(databaseName, collection, "setOrderStatus");
-			await client.ExecuteStoredProcedureAsync<dynamic>(procedure,new RequestOptions() { PartitionKey = new PartitionKey(input.Date) }, input.Id, "Approved");
+			var procedure = UriFactory.CreateStoredProcedureUri(databaseName, collection, "setOrderStatus");			
+			await client.ExecuteStoredProcedureAsync<dynamic>(procedure,new RequestOptions() { PartitionKey = new PartitionKey(input.Date) }, input.Id, input.Status);
 		}
 	}
 }
