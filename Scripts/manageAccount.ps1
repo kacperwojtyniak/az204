@@ -59,5 +59,5 @@ Set-AzCosmosDBSqlDatabase `
    -AccountName $accountName `
    -DatabaseName $databaseName `
    -ContainerName 'Orders' `
-   -Name 'approveOrder' `
+   -Name 'setOrderStatus' `
    -Body  $procedure

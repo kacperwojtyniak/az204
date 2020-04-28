@@ -1,4 +1,4 @@
-function approveOrder(id) {
+function setOrderStatus(id, status) {
     var collection = getContext().getCollection();
     var collectionLink = collection.getSelfLink();
     var response = getContext().getResponse();
@@ -13,7 +13,7 @@ function approveOrder(id) {
 
             if (documents.length > 0) {
                 var order = documents[0];
-                order.approved = true;
+                order.status = status;
                 collection.replaceDocument(order._self, order, function (err, updatedDocument, responseOptions) {
                     response.setBody(updatedDocument);
                 });
