@@ -1,4 +1,4 @@
-function update(id) {
+function approveOrder(id) {
     var collection = getContext().getCollection();
     var collectionLink = collection.getSelfLink();
     var response = getContext().getResponse();
