@@ -52,6 +52,7 @@ Set-AzCosmosDBSqlDatabase `
     -PartitionKeyPath '/date'
 
     #Register stored procedure
+    #API Reference https://azure.github.io/azure-cosmosdb-js-server/Collection.html
     $procedure = Get-Content '.\Scripts\approveStoredProcedure.js' -Raw
     Set-AzCosmosDBSqlStoredProcedure `
    -ResourceGroupName $resourceGroupName `
