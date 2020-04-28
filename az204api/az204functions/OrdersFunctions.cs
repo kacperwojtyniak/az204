@@ -5,7 +5,9 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -16,10 +18,12 @@ namespace az204functions
 {
 	public class OrdersFunctions
 	{
+		private Config config;
 		private HttpClient httpClient;
 
-		public OrdersFunctions(IHttpClientFactory httpClientFactory)
+		public OrdersFunctions(IHttpClientFactory httpClientFactory, IOptionsMonitor<Config> configuration)
 		{
+			this.config = configuration.CurrentValue;
 			this.httpClient = httpClientFactory.CreateClient("orders-logicapp");
 		}
 		//[FunctionName("ValidateOrder")]
@@ -34,19 +38,19 @@ namespace az204functions
 		//	throw new NotImplementedException();
 		//}
 
-		[FunctionName("RequestApproval")]
+		[FunctionName(nameof(RequestApproval))]
 		public async Task RequestApproval([HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest req, [DurableClient] IDurableClient starter)
 		{
 			var orderId = req.Query["id"][0];
 			var date = req.Query["date"][0];
-			await starter.StartNewAsync<OrderModel>("WaitForOrderApproval", input: new OrderModel (){ Id = orderId, Date = date });
+			await starter.StartNewAsync<OrderModel>(nameof(WaitForOrderApproval), input: new OrderModel (){ Id = orderId, Date = date });
 		}
 
-		[FunctionName("WaitForOrderApproval")]
+		[FunctionName(nameof(WaitForOrderApproval))]
 		public async Task WaitForOrderApproval([OrchestrationTrigger]IDurableOrchestrationContext context)
 		{
 			var input = context.GetInput<OrderModel>();
-			await context.CallActivityAsync("SendApprovalRequest", input); // Send email/sms whatever. Right now just add to table
+			await context.CallActivityAsync(nameof(SendApprovalRequest), input); // Send email/sms whatever. Right now just add to table
 
 			using var timeoutCts = new CancellationTokenSource();
 			DateTime dueTime = context.CurrentUtcDateTime.AddMinutes(5);
@@ -60,16 +64,16 @@ namespace az204functions
 				if (approvalEvent.Result.Approved)
 				{
 					input.Status = OrderStatus.Approved;
-					await context.CallActivityAsync("SetStatus", input);
+					await context.CallActivityAsync(nameof(SetStatus), input);
 					return;
 				};
 			}
 			input.Status = OrderStatus.Rejected;
-			await context.CallActivityAsync("SetStatus", input);
+			await context.CallActivityAsync(nameof(SetStatus), input);
 
 		}
 		
-		[FunctionName("SendApprovalRequest")]
+		[FunctionName(nameof(SendApprovalRequest))]
 		public void SendApprovalRequest([ActivityTrigger] IDurableActivityContext helloContext, [CosmosDB(
 				databaseName: "%databaseName%",
 				collectionName: "%ordersCollection%",
@@ -82,16 +86,14 @@ namespace az204functions
 			document = new ApprovalModel() { Date = DateTime.UtcNow.ToShortDateString(), Url = url, OrderId = order.Id};
 		}
 
-		[FunctionName("SetStatus")]
+		[FunctionName(nameof(SetStatus))]
 		public async Task SetStatus([ActivityTrigger]IDurableActivityContext context, [CosmosDB(
 				databaseName: "%databaseName%",
 				collectionName: "%ordersCollection%",
 				ConnectionStringSetting = "connectionString")] DocumentClient client)
 		{
 			var input = context.GetInput<OrderModel>();
-			var databaseName = Environment.GetEnvironmentVariable("databaseName");
-			var collection = Environment.GetEnvironmentVariable("ordersCollection");
-			var procedure = UriFactory.CreateStoredProcedureUri(databaseName, collection, "setOrderStatus");			
+			var procedure = UriFactory.CreateStoredProcedureUri(config.DatabaseName, config.OrdersCollection, "setOrderStatus");			
 			await client.ExecuteStoredProcedureAsync<dynamic>(procedure,new RequestOptions() { PartitionKey = new PartitionKey(input.Date) }, input.Id, input.Status);
 		}
 	}
