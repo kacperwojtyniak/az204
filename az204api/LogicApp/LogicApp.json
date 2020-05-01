@@ -2,72 +2,130 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "logicAppName": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 80,
-      "metadata": {
-        "description": "Name of the Logic App."
-      }
+    "workflows_az204_name": {
+      "defaultValue": "az204",
+      "type": "String"
     },
-    "logicAppLocation": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "allowedValues": [
-        "[resourceGroup().location]",
-        "eastasia",
-        "southeastasia",
-        "centralus",
-        "eastus",
-        "eastus2",
-        "westus",
-        "northcentralus",
-        "southcentralus",
-        "northeurope",
-        "westeurope",
-        "japanwest",
-        "japaneast",
-        "brazilsouth",
-        "australiaeast",
-        "australiasoutheast",
-        "southindia",
-        "centralindia",
-        "westindia",
-        "canadacentral",
-        "canadaeast",
-        "uksouth",
-        "ukwest",
-        "westcentralus",
-        "westus2",
-        "koreacentral",
-        "koreasouth",
-        "francecentral",
-        "francesouth",
-        "uaecentral",
-        "southafricanorth",
-        "southafricawest"
-      ],
-      "metadata": {
-        "description": "Location of the Logic App."
-      }
+    "sites_az204_externalid": {
+      "defaultValue": "/subscriptions/82b5bb8a-2ea2-454a-80f5-cbada80b910c/resourceGroups/az204/providers/Microsoft.Web/sites/az204",
+      "type": "String"
+    },
+    "connections_documentdb_1_externalid": {
+      "defaultValue": "/subscriptions/82b5bb8a-2ea2-454a-80f5-cbada80b910c/resourceGroups/az204/providers/Microsoft.Web/connections/documentdb-1",
+      "type": "String"
     }
   },
   "variables": {},
   "resources": [
     {
-      "name": "[parameters('logicAppName')]",
       "type": "Microsoft.Logic/workflows",
-      "location": "[parameters('logicAppLocation')]",
+      "apiVersion": "2017-07-01",
+      "name": "[parameters('workflows_az204_name')]",
+      "location": "eastus",
       "tags": {
         "displayName": "LogicApp"
       },
-      "apiVersion": "2016-06-01",
       "properties": {
+        "state": "Enabled",
         "definition": {
           "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "$connections": {
+              "defaultValue": {},
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                  "properties": {
+                    "date": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "totalAmount": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
           "actions": {
             "Condition": {
-              "type": "If",
+              "actions": {
+                "RequestApproval": {
+                  "runAfter": {},
+                  "type": "Function",
+                  "inputs": {
+                    "function": {
+                      "id": "[concat(parameters('sites_az204_externalid'), '/functions/RequestApproval')]"
+                    },
+                    "queries": {
+                      "date": "@triggerBody()?['date']",
+                      "id": "@triggerBody()?['id']"
+                    }
+                  }
+                },
+                "Response": {
+                  "runAfter": {
+                    "RequestApproval": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Response",
+                  "kind": "Http",
+                  "inputs": {
+                    "body": "@body('RequestApproval')",
+                    "statusCode": "@outputs('RequestApproval')['statusCode']"
+                  }
+                }
+              },
+              "runAfter": {},
+              "else": {
+                "actions": {
+                  "Execute_stored_procedure": {
+                    "runAfter": {},
+                    "type": "ApiConnection",
+                    "inputs": {
+                      "body": "[[\"@{triggerBody()?['id']}\",1]",
+                      "headers": {
+                        "x-ms-documentdb-raw-partitionkey": "\"@{triggerBody()?['date']}\""
+                      },
+                      "host": {
+                        "connection": {
+                          "name": "@parameters('$connections')['documentdb']['connectionId']"
+                        }
+                      },
+                      "method": "post",
+                      "path": "/dbs/@{encodeURIComponent('Az204')}/colls/@{encodeURIComponent('Orders')}/sprocs/@{encodeURIComponent('setOrderStatus')}"
+                    }
+                  },
+                  "Response_2": {
+                    "runAfter": {
+                      "Execute_stored_procedure": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "Response",
+                    "kind": "Http",
+                    "inputs": {
+                      "body": "@body('Execute_stored_procedure')",
+                      "statusCode": 200
+                    }
+                  }
+                }
+              },
               "expression": {
                 "or": [
                   {
@@ -78,51 +136,23 @@
                   }
                 ]
               },
-              "actions": {},
-              "runAfter": {}
+              "type": "If"
             }
           },
-          "parameters": {},
-          "triggers": {
-            "manual": {
-              "type": "Request",
-              "kind": "Http",
-              "inputs": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "totalAmount": {
-                      "type": "number"
-                    },
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "unitPrice": {
-                            "type": "number"
-                          },
-                          "quantity": {
-                            "type": "integer"
-                          }
-                        },
-                        "required": [
-                          "unitPrice",
-                          "quantity"
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "contentVersion": "1.0.0.0",
           "outputs": {}
         },
-        "parameters": {}
+        "parameters": {
+          "$connections": {
+            "value": {
+              "documentdb": {
+                "connectionId": "[parameters('connections_documentdb_1_externalid')]",
+                "connectionName": "documentdb-1",
+                "id": "/subscriptions/82b5bb8a-2ea2-454a-80f5-cbada80b910c/providers/Microsoft.Web/locations/eastus/managedApis/documentdb"
+              }
+            }
+          }
+        }
       }
     }
-  ],
-  "outputs": {}
+  ]
 }

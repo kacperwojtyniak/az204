@@ -3,7 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "logicAppName": {
-      "value": null
+      "value": "az204"
+    },
+    "logicAppLocation": {
+      "value": "eastus"
     }
   }
 }
