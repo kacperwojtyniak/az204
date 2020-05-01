@@ -5,46 +5,49 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace az204functions
 {
-	public class OrdersFunctions
-	{
-		private Config config;
-		private HttpClient httpClient;
+    public class OrdersFunctions
+    {
+        private Config config;
+        private HttpClient httpClient;
 
-		public OrdersFunctions(IHttpClientFactory httpClientFactory, IOptionsMonitor<Config> configuration)
-		{
-			this.config = configuration.CurrentValue;
-			this.httpClient = httpClientFactory.CreateClient("orders-logicapp");
-		}
-		//[FunctionName("ValidateOrder")]
-		//public async Task ValidateOrder([CosmosDBTrigger(
-		//	databaseName: "%databaseName%",
-		//	collectionName: "%ordersCollection%",
-		//	ConnectionStringSetting = "connectionString",
-		//	CreateLeaseCollectionIfNotExists = true,
-		//	LeaseCollectionName ="leaseOrders")]IReadOnlyList<Document> input, ILogger log)
-		//{
-		//	//Call logic app
-		//	throw new NotImplementedException();
-		//}
+        public OrdersFunctions(IHttpClientFactory httpClientFactory, IOptionsMonitor<Config> configuration)
+        {
+            this.config = configuration.CurrentValue;
+            this.httpClient = httpClientFactory.CreateClient("orders-logicapp");
+        }
 
-		[FunctionName(nameof(RequestApproval))]
-		public async Task RequestApproval([HttpTrigger(AuthorizationLevel.Anonymous, "post")]HttpRequest req, [DurableClient] IDurableClient starter)
-		{
-			var orderId = req.Query["id"][0];
-			var date = req.Query["date"][0];
-			await starter.StartNewAsync<OrderModel>(nameof(WaitForOrderApproval), input: new OrderModel (){ Id = orderId, Date = date });
-		}
+        [FunctionName("ValidateOrder")]
+        public async Task ValidateOrder([CosmosDBTrigger(
+            databaseName: "%databaseName%",
+            collectionName: "%ordersCollection%",
+            ConnectionStringSetting = "connectionString",
+            CreateLeaseCollectionIfNotExists = true,
+            LeaseCollectionName ="leaseOrders")]IReadOnlyList<Document> orders, ILogger log)
+        {
+            foreach (var document in orders)
+            {
+                var order = JsonSerializer.Deserialize<OrderModel>(document.ToString(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                if (order.Status == OrderStatus.Pending)
+                {
+                    var bytes = JsonSerializer.SerializeToUtf8Bytes<OrderModel>(order, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                    var content = new ByteArrayContent(bytes);
+                    content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    await this.httpClient.PostAsync(string.Empty, content);
+                }
+            }
+        }
 
 		[FunctionName(nameof(WaitForOrderApproval))]
 		public async Task WaitForOrderApproval([OrchestrationTrigger]IDurableOrchestrationContext context)
