@@ -30,16 +30,17 @@ namespace az204api.Controllers
         {
             try
             {
-                var query = $"select distinct c.roastery from c";
+                var query = $"SELECT DISTINCT VALUE c.roastery FROM c ORDER BY c.roastery";
                 if (!string.IsNullOrEmpty(continuationToken))
                 {
                     var tokenBytes = Convert.FromBase64String(continuationToken);
                     continuationToken = UTF8Encoding.UTF8.GetString(tokenBytes);
                 }
                 var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
-                var iterator = container.GetItemQueryIterator<CoffeeModel>(query, continuationToken);
-                var result = await iterator.ReadNextAsync();
-                return new QueryResult(null, result, result.RequestCharge);
+                var iterator = container.GetItemQueryIterator<dynamic>(query, continuationToken);
+               
+                var result = await iterator.ReadNextAsync();                
+                return new QueryResult(result.ContinuationToken, result, result.RequestCharge);
             }
             catch (Exception ex)
             {
