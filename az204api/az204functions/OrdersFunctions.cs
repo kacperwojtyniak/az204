@@ -105,7 +105,7 @@ namespace az204functions
         {
             var input = context.GetInput<OrderModel>();
             var procedure = UriFactory.CreateStoredProcedureUri(config.DatabaseName, config.OrdersCollection, "setOrderStatus");
-            await client.ExecuteStoredProcedureAsync<dynamic>(procedure, new RequestOptions() { PartitionKey = new PartitionKey(input.Date) }, input.Id, input.Status);
+            await client.ExecuteStoredProcedureAsync<dynamic>(procedure, new RequestOptions() { PartitionKey = new PartitionKey(input.Date) }, input.Id, input.Status, DateTime.UtcNow);
         }
     }
 }

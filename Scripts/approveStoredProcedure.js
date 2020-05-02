@@ -1,4 +1,4 @@
-function setOrderStatus(id, status) {
+function setOrderStatus(id, status, date) {
     var collection = getContext().getCollection();
     var collectionLink = collection.getSelfLink();
     var response = getContext().getResponse();
@@ -14,6 +14,7 @@ function setOrderStatus(id, status) {
             if (documents.length > 0) {
                 var order = documents[0];
                 order.status = status;
+                order.approvalDate = date;
                 collection.replaceDocument(order._self, order, function (err, updatedDocument, responseOptions) {
                     response.setBody(updatedDocument);
                 });
