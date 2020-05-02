@@ -1,4 +1,6 @@
 using az204api.Models;
+using az204api.Telemetry;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.Cosmos;
@@ -28,7 +30,8 @@ namespace az204api
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 });
             services.AddSwaggerDocument();
-
+            services.AddApplicationInsightsTelemetry();
+            services.AddSingleton<ITelemetryInitializer, TelemetryInitializer>();
             services.AddSingleton<CosmosClient>(service =>
             {
                 var conn = Configuration.GetValue<string>(nameof(Config.CosmosDbConnString));
