@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using static az204api.Constants;
@@ -15,7 +13,7 @@ namespace az204api.Controllers
     [Route("[controller]")]
     public class CoffeeController : ControllerBase
     {
-        
+
         private readonly CosmosClient client;
         private readonly ILogger<CoffeeController> _logger;
 
@@ -38,8 +36,8 @@ namespace az204api.Controllers
                 }
                 var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
                 var iterator = container.GetItemQueryIterator<dynamic>(query, continuationToken);
-               
-                var result = await iterator.ReadNextAsync();                
+
+                var result = await iterator.ReadNextAsync();
                 return new QueryResult(result.ContinuationToken, result, result.RequestCharge);
             }
             catch (Exception ex)
@@ -47,8 +45,8 @@ namespace az204api.Controllers
                 _logger.LogError(ex, "Failed to get roasters");
                 throw;
             }
-
         }
+
         [HttpGet("roastery/{roastery}")]
         public async Task<QueryResult> Get(string roastery, [FromQuery]string continuationToken = default(string))
         {
@@ -62,16 +60,17 @@ namespace az204api.Controllers
             {
                 _logger.LogError(ex, "Failed to get coffes from {roastery}", roastery);
                 throw;
-            }            
+            }
         }
+
         [HttpGet("brewing/{brewingMethod}")]
-        public async Task<QueryResult> GetByBrewingMethod(string brewingMethod, [FromQuery]string partitionKey, [FromQuery]string continuationToken = default(string))
+        public async Task<QueryResult> GetByBrewingMethod(string brewingMethod, [FromQuery]string continuationToken = default(string))
         {
             try
             {
                 var query = $"SELECT * FROM c";
                 var container = client.GetContainer(DATABASE_ID, COFFEESBREWING_CONTAINER);
-                return await QueryAsync(query, container, partitionKey, continuationToken);
+                return await QueryAsync(query, container, brewingMethod, continuationToken);
             }
             catch (Exception ex)
             {
@@ -80,13 +79,13 @@ namespace az204api.Controllers
             }
         }
         [HttpGet("origin/{origin}")]
-        public async Task<QueryResult> GetByOrigin(string origin, [FromQuery]string partitionKey, [FromQuery]string continuationToken = default(string))
+        public async Task<QueryResult> GetByOrigin(string origin, [FromQuery]string continuationToken = default(string))
         {
             try
             {
-                var query = $"SELECT * FROM c WHERE c.origin = '{origin}'";
-                var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
-                return await QueryAsync(query, container, partitionKey, continuationToken);
+                var query = $"SELECT * FROM c WHERE";
+                var container = client.GetContainer(DATABASE_ID, COFFEESORIGIN_CONTAINER);
+                return await QueryAsync(query, container, origin, continuationToken);
             }
             catch (Exception ex)
             {
@@ -136,7 +135,7 @@ namespace az204api.Controllers
             return Ok();
         }
 
-        private async Task<QueryResult> QueryAsync(string query,Container container, string partitionKey = null, string continuationToken = null)
+        private async Task<QueryResult> QueryAsync(string query, Container container, string partitionKey = null, string continuationToken = null)
         {
             var queryOptions = string.IsNullOrEmpty(partitionKey) ? null : new QueryRequestOptions() { PartitionKey = new PartitionKey(partitionKey) };
             if (!string.IsNullOrEmpty(continuationToken))
@@ -144,7 +143,7 @@ namespace az204api.Controllers
                 var tokenBytes = Convert.FromBase64String(continuationToken);
                 continuationToken = UTF8Encoding.UTF8.GetString(tokenBytes);
             }
-            
+
             var iterator = container.GetItemQueryIterator<CoffeeModel>(query, continuationToken, queryOptions);
             var result = await iterator.ReadNextAsync();
             return new QueryResult(result.ContinuationToken, result, result.RequestCharge);
