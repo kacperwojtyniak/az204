@@ -13,6 +13,7 @@ namespace az204api.Models
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public IEnumerable<OrderItem> Items { get; set; }
         public string Type => "Order";
+        public DateTime ApprovalDate { get; set; }
         public OrderModel()
         {
 
