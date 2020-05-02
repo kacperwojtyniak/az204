@@ -54,7 +54,7 @@ namespace az204api.Controllers
         {
             try
             {
-                var query = $"select * from c where c.roastery = '{roastery}'";
+                var query = $"SELECT * FROM c WHERE c.roastery = '{roastery}'";
                 var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
                 return await QueryAsync(query, container, continuationToken: continuationToken);
             }
@@ -69,7 +69,7 @@ namespace az204api.Controllers
         {
             try
             {
-                var query = $"select * from c";
+                var query = $"SELECT * FROM c";
                 var container = client.GetContainer(DATABASE_ID, COFFEESBREWING_CONTAINER);
                 return await QueryAsync(query, container, partitionKey, continuationToken);
             }
@@ -84,7 +84,7 @@ namespace az204api.Controllers
         {
             try
             {
-                var query = $"select * from c where c.origin = '{origin}'";
+                var query = $"SELECT * FROM c WHERE c.origin = '{origin}'";
                 var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
                 return await QueryAsync(query, container, partitionKey, continuationToken);
             }
@@ -100,7 +100,7 @@ namespace az204api.Controllers
         {
             try
             {
-                var query = $"select * from c where c.id = '{id}'";
+                var query = $"SELECT * FROM c WHERE c.id = '{id}'";
                 var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
                 return await QueryAsync(query, container);
             }

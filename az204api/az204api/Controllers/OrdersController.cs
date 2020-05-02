@@ -46,7 +46,7 @@ namespace az204api.Controllers
                 var tokenBytes = Convert.FromBase64String(continuationToken);
                 continuationToken = UTF8Encoding.UTF8.GetString(tokenBytes);
             }
-            var query = $"select * from c where c.date = '{date}'";
+            var query = $"SELECT * FROM c WHERE c.date = '{date}'";
             var ordersContainer = this.client.GetContainer(DATABASE_ID, ORDERS_CONTAINER);
             var result = await ordersContainer.GetItemQueryIterator<OrderModel>(query, continuationToken).ReadNextAsync();
             return Ok(new QueryResult(result.ContinuationToken, result, result.RequestCharge));
