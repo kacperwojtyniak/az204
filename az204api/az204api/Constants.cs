@@ -5,6 +5,7 @@
         public const string DATABASE_ID = "Az204";
         public const string COFFEES_CONTAINER = "Coffees";
         public const string COFFEESBREWING_CONTAINER = "CoffeesBrewing";
+        public const string COFFEESORIGIN_CONTAINER = "CoffeesOrigin";
         public const string ORDERS_CONTAINER = "Orders";
         
     }
