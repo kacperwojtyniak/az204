@@ -32,6 +32,7 @@ namespace az204api
             services.AddSwaggerDocument();
             services.AddApplicationInsightsTelemetry();
             services.AddSingleton<ITelemetryInitializer, TelemetryInitializer>();
+            services.AddHealthChecks();
             services.AddSingleton<CosmosClient>(service =>
             {
                 var conn = Configuration.GetValue<string>(nameof(Config.CosmosDbConnString));
@@ -62,6 +63,7 @@ namespace az204api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
