@@ -7,6 +7,7 @@ namespace az204api.Models
 {
     public class Config
     {
+        public string BlobUrl { get; set; }
         public string KeyVaultUrl { get; set; }
         public string CosmosDbConnString { get; set; }
     }
