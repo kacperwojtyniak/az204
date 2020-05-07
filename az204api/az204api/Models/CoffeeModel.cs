@@ -8,6 +8,7 @@ namespace az204api.Models
     public class CoffeeModel
     {
         public string Id { get; set; }
+        public string Name { get; set; }
         public string Roastery { get; set; }
         public string Origin { get; set; }
         public string Region { get; set; }
@@ -16,12 +17,14 @@ namespace az204api.Models
         public string Process { get; set; }
         public string BrewingMethod { get; set; }
         public decimal UnitPrice { get; set; }
+        public string ImgUrl { get; set; }
 
         public static CoffeeModel Create(AddCoffeeModel coffee)
         {
             return new CoffeeModel()
             {
                 Id = Guid.NewGuid().ToString(),
+                Name = coffee.Name,
                 Roastery = coffee.Roastery,
                 Origin = coffee.Origin,
                 Region = coffee.Region,
