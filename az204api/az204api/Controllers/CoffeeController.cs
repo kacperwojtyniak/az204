@@ -112,10 +112,10 @@ namespace az204api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody]AddCoffeeModel coffee)
+        public async Task<IActionResult> Add([FromBody]CoffeeModel coffee)
         {
             var container = client.GetContainer(DATABASE_ID, COFFEES_CONTAINER);
-            await container.CreateItemAsync(CoffeeModel.Create(coffee), new PartitionKey(coffee.Roastery));
+            await container.CreateItemWithIdAsync(coffee, new PartitionKey(coffee.Roastery));
             return Ok();
         }
 

@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace az204api.Models
 {
-    public class CoffeeModel
-    {
-        public string Id { get; set; }
+    public class CoffeeModel : Document
+    {        
         public string Name { get; set; }
         public string Roastery { get; set; }
         public string Origin { get; set; }
@@ -18,22 +17,5 @@ namespace az204api.Models
         public string BrewingMethod { get; set; }
         public decimal UnitPrice { get; set; }
         public string ImgUrl { get; set; }
-
-        public static CoffeeModel Create(AddCoffeeModel coffee)
-        {
-            return new CoffeeModel()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = coffee.Name,
-                Roastery = coffee.Roastery,
-                Origin = coffee.Origin,
-                Region = coffee.Region,
-                AltitudeMax = coffee.AltitudeMax,
-                AltitudeMin = coffee.AltitudeMin,
-                Process = coffee.Process,
-                BrewingMethod = coffee.BrewingMethod,
-                UnitPrice = coffee.UnitPrice
-            };
-        }
     }
 }

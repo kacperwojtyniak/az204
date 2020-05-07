@@ -33,7 +33,7 @@ namespace az204api.Controllers
             var order = new OrderModel(orderItems);
 
             var ordersContainer = this.client.GetContainer(DATABASE_ID, ORDERS_CONTAINER);
-            await ordersContainer.CreateItemAsync(order);
+            await ordersContainer.CreateItemWithIdAsync(order);
 
             return Ok();
         }
