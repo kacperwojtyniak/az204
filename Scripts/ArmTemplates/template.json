@@ -4,7 +4,7 @@
     "parameters": {
         "redisName": {
             "type": "String"
-        },        
+        },
         "redisSku": {
             "defaultValue": {
                 "name": "Standard",
@@ -35,10 +35,21 @@
         },
         "setOderStatusFunction": {
             "type": "String"
-        }        
+        },
+        "storageAccountName": {
+            "type": "String"
+        },
+        "functionsServicePlanName": {
+            "type": "String"
+        },
+        "functionsName": {
+            "type": "String"
+        }
+        
+
     },
     "variables": {
-        "databaseFullName" : "[concat(parameters('cosmosDbAccountName'),'/',parameters('databaseName'))]"
+        "databaseFullName": "[concat(parameters('cosmosDbAccountName'),'/',parameters('databaseName'))]"
     },
     "resources": [
         {
@@ -83,14 +94,15 @@
                 "enableAutomaticFailover": false,
                 "enableMultipleWriteLocations": false,
                 "isVirtualNetworkFilterEnabled": false,
-                "virtualNetworkRules": [],
+                "virtualNetworkRules": [
+                ],
                 "disableKeyBasedMetadataWriteAccess": false,
                 "databaseAccountOfferType": "Standard",
                 "consistencyPolicy": {
                     "defaultConsistencyLevel": "Session",
                     "maxIntervalInSeconds": 5,
                     "maxStalenessPrefix": 100
-                }                
+                }
             }
         },
         {
@@ -104,7 +116,8 @@
                 "resource": {
                     "id": "[parameters('databaseName')]"
                 },
-                "options": {}
+                "options": {
+                }
             }
         },
         {
@@ -139,14 +152,16 @@
                         "kind": "Hash"
                     },
                     "uniqueKeyPolicy": {
-                        "uniqueKeys": []
+                        "uniqueKeys": [
+                        ]
                     },
                     "conflictResolutionPolicy": {
                         "mode": "LastWriterWins",
                         "conflictResolutionPath": "/_ts"
                     }
                 },
-                "options": {}
+                "options": {
+                }
             }
         },
         {
@@ -181,14 +196,16 @@
                         "kind": "Hash"
                     },
                     "uniqueKeyPolicy": {
-                        "uniqueKeys": []
+                        "uniqueKeys": [
+                        ]
                     },
                     "conflictResolutionPolicy": {
                         "mode": "LastWriterWins",
                         "conflictResolutionPath": "/_ts"
                     }
                 },
-                "options": {}
+                "options": {
+                }
             }
         },
         {
@@ -223,14 +240,16 @@
                         "kind": "Hash"
                     },
                     "uniqueKeyPolicy": {
-                        "uniqueKeys": []
+                        "uniqueKeys": [
+                        ]
                     },
                     "conflictResolutionPolicy": {
                         "mode": "LastWriterWins",
                         "conflictResolutionPath": "/_ts"
                     }
                 },
-                "options": {}
+                "options": {
+                }
             }
         },
         {
@@ -265,14 +284,16 @@
                         "kind": "Hash"
                     },
                     "uniqueKeyPolicy": {
-                        "uniqueKeys": []
+                        "uniqueKeys": [
+                        ]
                     },
                     "conflictResolutionPolicy": {
                         "mode": "LastWriterWins",
                         "conflictResolutionPath": "/_ts"
                     }
                 },
-                "options": {}
+                "options": {
+                }
             }
         },
         {
@@ -289,14 +310,127 @@
                     "id": "setOrderStatus",
                     "body": "[parameters('setOderStatusFunction')]"
                 },
-                "options": {}
+                "options": {
+                }
+            }
+        },
+        {
+            "name": "[parameters('storageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-07-01",
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "accessTier": "Hot"
+            },
+            "resources": [
+                {
+                    "name": "[concat('default/', 'coffees')]",
+                    "type": "blobServices/containers",
+                    "apiVersion": "2018-07-01",
+                    "dependsOn": [
+                        "[parameters('storageAccountName')]"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[parameters('functionsServicePlanName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Y1",
+                "tier": "Dynamic",
+                "size": "Y1",
+                "family": "Y",
+                "capacity": 0
+            },
+            "kind": "functionapp",
+            "properties": {
+                "perSiteScaling": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-02-01",
+            "name": "[parameters('functionsName')]",
+            "kind": "functionapp",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/serverfarms', parameters('functionsServicePlanName'))]"
+            ],
+            "properties": {
+                "name": "[parameters('functionsName')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(parameters('storageAccountName'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "databaseName",
+                            "value": "[parameters('databaseName')]"
+                        },
+                        {
+                            "name": "inputCollection",
+                            "value": "Coffees"
+                        },
+                        {
+                            "name": "ordersCollection",
+                            "value": "Orders"
+                        },
+                        {
+                            "name": "outputCollectionBrewing",
+                            "value": "CoffeesBrewing"
+                        },
+                        {
+                            "name": "outputCollectionOrigin",
+                            "value": "CoffeesOrigin"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(parameters('storageAccountName'),'2015-05-01-preview').key1)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[toLower(parameters('functionsName'))]"
+                        },
+                        {
+                            "name": "WEBSITE_RUN_FROM_PACKAGE",
+                            "value": "1"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~3"
+                        }
+                    ]
+                },
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('functionsServicePlanName'))]",
+                "clientAffinityEnabled": false
             }
         },
         {
             "name": "[parameters('kvName')]",
             "type": "Microsoft.KeyVault/vaults",
             "apiVersion": "2018-02-14",
-            "location": "[resourceGroup().location]",            
+            "location": "[resourceGroup().location]",
             "properties": {
                 "tenantId": "[subscription().tenantId]",
                 "sku": {
