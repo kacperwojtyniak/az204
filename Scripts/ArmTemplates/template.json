@@ -2,53 +2,354 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "name": {
-            "type": "string"
+        "redisName": {
+            "type": "String"
+        },        
+        "redisSku": {
+            "defaultValue": {
+                "name": "Standard",
+                "family": "C",
+                "capacity": "0"
+            },
+            "type": "object"
         },
-        "location": {
-            "type": "string"
+        "acrName": {
+            "type": "String"
         },
-        "locationName": {
-            "type": "string"
+        "acrSku": {
+            "defaultValue": "Standard",
+            "type": "String",
+            "allowedValues": [
+                "Basic",
+                "Standard"
+            ]
         },
-        "defaultExperience": {
-            "type": "string"
+        "kvName": {
+            "type": "String"
         },
-        "isZoneRedundant": {
-            "type": "string"
-        }
+        "cosmosDbAccountName": {
+            "type": "String"
+        },
+        "databaseName": {
+            "type": "String"
+        },
+        "setOderStatusFunction": {
+            "type": "String"
+        }        
     },
-    "variables": {},
+    "variables": {
+        "databaseFullName" : "[concat(parameters('cosmosDbAccountName'),'/',parameters('databaseName'))]"
+    },
     "resources": [
         {
-            "apiVersion": "2019-12-12",
-            "kind": "GlobalDocumentDB",
-            "type": "Microsoft.DocumentDb/databaseAccounts",
-            "name": "[parameters('name')]",
-            "location": "[parameters('location')]",
+            "name": "[parameters('redisName')]",
+            "type": "Microsoft.Cache/Redis",
+            "apiVersion": "2018-03-01",
             "properties": {
-                "databaseAccountOfferType": "Standard",
-                "locations": [
-                    {
-                        "id": "[concat(parameters('name'), '-', parameters('location'))]",
-                        "failoverPriority": 0,
-                        "locationName": "[parameters('locationName')]"
-                    }
-                ],
+                "redisConfiguration": {
+                },
+                "enableNonSslPort": "false",
+                "tenantSettings": {
+                },
+                "sku": "[parameters('redisSku')]"
+            },
+            "location": "[resourceGroup().location]"
+        },
+        {
+            "name": "[parameters('acrName')]",
+            "type": "Microsoft.ContainerRegistry/registries",
+            "apiVersion": "2019-05-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('acrSku')]"
+            },
+            "resources": [
+            ]
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2020-03-01",
+            "name": "[parameters('cosmosDbAccountName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "defaultExperience": "Core (SQL)",
+                "hidden-cosmos-mmspecial": "",
+                "CosmosAccountType": "Non-Production"
+            },
+            "kind": "GlobalDocumentDB",
+            "properties": {
+                "enableFreeTier": true,
+                "publicNetworkAccess": "Enabled",
+                "enableAutomaticFailover": false,
                 "enableMultipleWriteLocations": false,
                 "isVirtualNetworkFilterEnabled": false,
                 "virtualNetworkRules": [],
-                "ipRangeFilter": "",
-                "dependsOn": [],
-                "capabilities": [],
-                "enableFreeTier": true
-            },
-            "tags": {
-                "defaultExperience": "[parameters('defaultExperience')]",
-                "hidden-cosmos-mmspecial": "",
-                "CosmosAccountType": "Non-Production"
+                "disableKeyBasedMetadataWriteAccess": false,
+                "databaseAccountOfferType": "Standard",
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Session",
+                    "maxIntervalInSeconds": 5,
+                    "maxStalenessPrefix": 100
+                }                
             }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
+            "apiVersion": "2020-03-01",
+            "name": "[variables('databaseFullName')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbAccountName'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "[parameters('databaseName')]"
+                },
+                "options": {}
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
+            "apiVersion": "2020-03-01",
+            "name": "[concat(variables('databaseFullName'), '/Coffees')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', parameters('cosmosDbAccountName'), parameters('databaseName'))]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbAccountName'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "Coffees",
+                    "indexingPolicy": {
+                        "indexingMode": "consistent",
+                        "automatic": true,
+                        "includedPaths": [
+                            {
+                                "path": "/*"
+                            }
+                        ],
+                        "excludedPaths": [
+                            {
+                                "path": "/\"_etag\"/?"
+                            }
+                        ]
+                    },
+                    "partitionKey": {
+                        "paths": [
+                            "/roastery"
+                        ],
+                        "kind": "Hash"
+                    },
+                    "uniqueKeyPolicy": {
+                        "uniqueKeys": []
+                    },
+                    "conflictResolutionPolicy": {
+                        "mode": "LastWriterWins",
+                        "conflictResolutionPath": "/_ts"
+                    }
+                },
+                "options": {}
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
+            "apiVersion": "2020-03-01",
+            "name": "[concat(variables('databaseFullName'), '/CoffeesBrewing')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', parameters('cosmosDbAccountName'), parameters('databaseName'))]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbAccountName'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "CoffeesBrewing",
+                    "indexingPolicy": {
+                        "indexingMode": "consistent",
+                        "automatic": true,
+                        "includedPaths": [
+                            {
+                                "path": "/*"
+                            }
+                        ],
+                        "excludedPaths": [
+                            {
+                                "path": "/\"_etag\"/?"
+                            }
+                        ]
+                    },
+                    "partitionKey": {
+                        "paths": [
+                            "/brewingMethod"
+                        ],
+                        "kind": "Hash"
+                    },
+                    "uniqueKeyPolicy": {
+                        "uniqueKeys": []
+                    },
+                    "conflictResolutionPolicy": {
+                        "mode": "LastWriterWins",
+                        "conflictResolutionPath": "/_ts"
+                    }
+                },
+                "options": {}
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
+            "apiVersion": "2020-03-01",
+            "name": "[concat(variables('databaseFullName'), '/CoffeesOrigin')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', parameters('cosmosDbAccountName'), parameters('databaseName'))]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbAccountName'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "CoffeesOrigin",
+                    "indexingPolicy": {
+                        "indexingMode": "consistent",
+                        "automatic": true,
+                        "includedPaths": [
+                            {
+                                "path": "/*"
+                            }
+                        ],
+                        "excludedPaths": [
+                            {
+                                "path": "/\"_etag\"/?"
+                            }
+                        ]
+                    },
+                    "partitionKey": {
+                        "paths": [
+                            "/origin"
+                        ],
+                        "kind": "Hash"
+                    },
+                    "uniqueKeyPolicy": {
+                        "uniqueKeys": []
+                    },
+                    "conflictResolutionPolicy": {
+                        "mode": "LastWriterWins",
+                        "conflictResolutionPath": "/_ts"
+                    }
+                },
+                "options": {}
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
+            "apiVersion": "2020-03-01",
+            "name": "[concat(variables('databaseFullName'), '/Orders')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', parameters('cosmosDbAccountName'), parameters('databaseName'))]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbAccountName'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "Orders",
+                    "indexingPolicy": {
+                        "indexingMode": "consistent",
+                        "automatic": true,
+                        "includedPaths": [
+                            {
+                                "path": "/*"
+                            }
+                        ],
+                        "excludedPaths": [
+                            {
+                                "path": "/\"_etag\"/?"
+                            }
+                        ]
+                    },
+                    "partitionKey": {
+                        "paths": [
+                            "/date"
+                        ],
+                        "kind": "Hash"
+                    },
+                    "uniqueKeyPolicy": {
+                        "uniqueKeys": []
+                    },
+                    "conflictResolutionPolicy": {
+                        "mode": "LastWriterWins",
+                        "conflictResolutionPath": "/_ts"
+                    }
+                },
+                "options": {}
+            }
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/storedProcedures",
+            "apiVersion": "2020-03-01",
+            "name": "[concat(parameters('cosmosDbAccountName'), '/', parameters('cosmosDbAccountName'), '/Orders/setOrderStatus')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers', parameters('cosmosDbAccountName'), parameters('databaseName'), 'Orders')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', parameters('cosmosDbAccountName'), parameters('databaseName'))]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbAccountName'))]"
+            ],
+            "properties": {
+                "resource": {
+                    "id": "setOrderStatus",
+                    "body": "[parameters('setOderStatusFunction')]"
+                },
+                "options": {}
+            }
+        },
+        {
+            "name": "[parameters('kvName')]",
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2018-02-14",
+            "location": "[resourceGroup().location]",            
+            "properties": {
+                "tenantId": "[subscription().tenantId]",
+                "sku": {
+                    "family": "A",
+                    "name": "string"
+                },
+                "accessPolicies": [
+                    {
+                        "tenantId": "string",
+                        "objectId": "string",
+                        "applicationId": "string",
+                        "permissions": {
+                            "keys": [
+                                "string"
+                            ],
+                            "secrets": [
+                                "string"
+                            ],
+                            "certificates": [
+                                "string"
+                            ],
+                            "storage": [
+                                "string"
+                            ]
+                        }
+                    }
+                ],
+                "vaultUri": "string",
+                "enabledForDeployment": "boolean",
+                "enabledForDiskEncryption": "boolean",
+                "enabledForTemplateDeployment": "boolean",
+                "enableSoftDelete": "boolean",
+                "createMode": "string",
+                "enablePurgeProtection": "boolean",
+                "networkAcls": {
+                    "bypass": "string",
+                    "defaultAction": "string",
+                    "ipRules": [
+                        {
+                            "value": "string"
+                        }
+                    ],
+                    "virtualNetworkRules": [
+                        {
+                            "id": "string"
+                        }
+                    ]
+                }
+            },
+            "resources": [
+            ]
         }
     ],
-    "outputs": {}
+    "outputs": {
+    }
 }
