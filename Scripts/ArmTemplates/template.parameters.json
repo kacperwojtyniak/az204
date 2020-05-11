@@ -1,31 +1,33 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-
-    "acrName": {
-      "value": "az204acr123"
-    },
-    "acrSku": {
-      "value": "Standard"
-    },
-    "kvName": {
-      "value": "az204kv123"
-    },
-    "cosmosDbAccountName": {
-      "value": "az204db123"
-    },
-    "databaseName": {
-      "value": "az204"
-    },
-    "storageAccountName": {
-      "value": "az204storage123"
-    },
-    "functionsServicePlanName": {
-      "value": "az204functionsplan123"
-    },
-    "functionsName": {
-      "value": "az204functions123"
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "acrName": {
+            "value": "az204acr123"
+        },
+        "acrSku": {
+            "value": "Standard"
+        },
+        "kvName": {
+            "value": "az204kv123"
+        },
+        "cosmosDbAccountName": {
+            "value": "az204db123"
+        },
+        "databaseName": {
+            "value": "az204"
+        },
+        "storageAccountName": {
+            "value": "az204storage123"
+        },
+        "functionsServicePlanName": {
+            "value": "az204functionsplan123"
+        },
+        "functionsName": {
+            "value": "az204functions123"
+        },
+        "userId": {
+            "value": "S"
+        }
     }
-  }
 }
