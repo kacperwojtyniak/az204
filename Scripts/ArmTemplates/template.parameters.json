@@ -6,7 +6,7 @@
             "value": "az204acr123"
         },
         "acrSku": {
-            "value": "Standard"
+            "value": "Basic"
         },
         "kvName": {
             "value": "az204kv123"
