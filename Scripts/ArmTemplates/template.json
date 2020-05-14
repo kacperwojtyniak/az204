@@ -34,6 +34,9 @@
     },
     "userId": {
       "type": "String"
+    },
+    "insightsName" : {
+      "type" : "String"
     }
   },
   "variables": {
@@ -441,7 +444,19 @@
       },
       "resources": [
       ]
-    }
+    },
+    {
+            "type": "microsoft.insights/components",
+            "apiVersion": "2015-05-01",
+            "name": "[parameters('insightsName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaAIExtension"
+            }
+        }
   ],
   "outputs": {
   }
