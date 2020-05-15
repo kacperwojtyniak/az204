@@ -28,6 +28,9 @@
         },
         "userId": {
             "value": "S"
-        }
+        },
+        "insightsName" : {
+            "value" : "az204insights"
+          }
     }
 }
