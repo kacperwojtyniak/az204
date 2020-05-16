@@ -418,7 +418,23 @@
         },
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('functionsServicePlanName'))]",
         "clientAffinityEnabled": false
-      }
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "name": "appsettings",
+          "type": "config",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', parameters('functionsName'))]"
+          ],
+          "properties": {
+            
+            "FUNCTIONS_EXTENSION_VERSION": "~3",
+            "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+            "Project": "..\\..\\az204api\\az204functions\\az204functions.csproj"
+          }
+        }
+      ]
     },
     {
       "name": "[parameters('kvName')]",
@@ -505,7 +521,8 @@
       "name": "[parameters('logicAppName')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/connections', parameters('documentDbConnection'))]"
+        "[resourceId('Microsoft.Web/connections', parameters('documentDbConnection'))]",
+        "[resourceId('Microsoft.Web/sites', parameters('functionsName'))]"
       ],
       "tags": {
         "displayName": "LogicApp"
