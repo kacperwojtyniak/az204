@@ -425,13 +425,15 @@
           "name": "appsettings",
           "type": "config",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', parameters('functionsName'))]"
+            "[resourceId('Microsoft.Web/Sites', parameters('functionsName'))]",
+            "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), variables('connectionStringSettingName'))]"
           ],
           "properties": {
-            
+
             "FUNCTIONS_EXTENSION_VERSION": "~3",
             "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-            "Project": "..\\..\\az204api\\az204functions\\az204functions.csproj"
+            "Project": "..\\..\\az204api\\az204functions\\az204functions.csproj",
+            "[variables('connectionStringSettingName')]" : "[concat('@Microsoft.KeyVault(SecretUri=', reference( resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), variables('connectionStringSettingName')), '2019-09-01', 'Full').properties.secretUriWithVersion, ')')]"
           }
         }
       ]
