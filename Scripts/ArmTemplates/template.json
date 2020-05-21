@@ -2,18 +2,6 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-
-    "acrName": {
-      "type": "String"
-    },
-    "acrSku": {
-      "defaultValue": "Basic",
-      "type": "String",
-      "allowedValues": [
-        "Basic",
-        "Standard"
-      ]
-    },
     "kvName": {
       "type": "String"
     },
@@ -38,33 +26,27 @@
     "insightsName": {
       "type": "String"
     },
-    "logicAppName": {
-      "type": "string",
-      "defaultValue": "az204logic123"
+    "containerGroupName": {
+      "type": "String"
     },
-    "documentDbConnection": {
-      "defaultValue": "documentdb",
+    "acrUserName": {
+      "type": "String"
+    },
+    "acrPassword": {
+      "type": "String"
+    },
+    "imageName": {
+      "type": "String"
+    },
+    "acrServerName": {
       "type": "String"
     }
   },
   "variables": {
     "databaseFullName": "[concat(parameters('cosmosDbAccountName'),'/',parameters('databaseName'))]",
-    "connectionStringSettingName": "connectionString",
-    "documentdbConnectionId": "[concat('/subscriptions/82b5bb8a-2ea2-454a-80f5-cbada80b910c/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/',parameters('documentDbConnection'))]",
-    "functionsConnectionId": "[concat('/subscriptions/82b5bb8a-2ea2-454a-80f5-cbada80b910c/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/sites/',parameters('functionsName'))]"
+    "connectionStringSettingName": "connectionString"
   },
   "resources": [
-    {
-      "name": "[parameters('acrName')]",
-      "type": "Microsoft.ContainerRegistry/registries",
-      "apiVersion": "2019-05-01",
-      "location": "[resourceGroup().location]",
-      "sku": {
-        "name": "[parameters('acrSku')]"
-      },
-      "resources": [
-      ]
-    },
     {
       "type": "Microsoft.DocumentDB/databaseAccounts",
       "apiVersion": "2020-03-01",
@@ -484,6 +466,24 @@
                 "all"
               ]
             }
+          },
+          {
+            "tenantId": "[subscription().tenantId]",
+            "objectId": "[reference( resourceId('Microsoft.ContainerInstance/containerGroups', parameters('containerGroupName')), '2018-10-01', 'Full').identity.principalId]",
+            "permissions": {
+              "keys": [
+                "all"
+              ],
+              "secrets": [
+                "all"
+              ],
+              "certificates": [
+                "all"
+              ],
+              "storage": [
+                "all"
+              ]
+            }
           }
         ],
         "enabledForDeployment": false,
@@ -516,6 +516,53 @@
         "Application_Type": "web",
         "Flow_Type": "Redfield",
         "Request_Source": "IbizaAIExtension"
+      }
+    },
+    {
+      "name": "[parameters('containerGroupName')]",
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2018-10-01",
+      "location": "[resourceGroup().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "containers": [
+          {
+            "name": "az204api",
+            "properties": {
+              "image": "[parameters('imageName')]",
+              "resources": {
+                "requests": {
+                  "cpu": 1,
+                  "memoryInGb": 1.5
+                }
+              },
+              "ports": [
+                {
+                  "port": 80
+                }
+              ]
+            }
+          }
+        ],
+        "imageRegistryCredentials": [
+          {
+            "server": "[parameters('acrServerName')]",
+            "username": "[parameters('acrUserName')]",
+            "password": "[parameters('acrPassword')]"
+          }
+        ],
+        "osType": "Linux",
+        "ipAddress": {
+          "type": "Public",
+          "ports": [
+            {
+              "protocol": "tcp",
+              "port": 80
+            }
+          ]
+        }
       }
     }
   ],

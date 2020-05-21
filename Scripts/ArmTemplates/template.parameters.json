@@ -1,15 +1,9 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "acrName": {
-            "value": "az204acr123"
-        },
-        "acrSku": {
-            "value": "Basic"
-        },
+    "parameters": {       
         "kvName": {
-            "value": "az204kv123"
+            "value": "az204kv12745583"
         },
         "cosmosDbAccountName": {
             "value": "az204db123"
@@ -31,6 +25,9 @@
         },
         "insightsName" : {
             "value" : "az204insights"
+          },
+          "containerGroupName" : {
+              "value": "az204containers"
           }
     }
 }
