@@ -1,14 +1,26 @@
 $resourceGroupName = "TestTemplates"
 $templatePath = "./template.json"
+$logicApptemplatePath = "./logicApp.json"
+$logicAppParameterPath = "./logicApp.parameters.json"
 $templateParameterPath = "./template.parameters.json"
 $location = "EastUs"
+$functionsPath = "../../az204api/az204functions"
+$publishPath = $functionsPath + '/bin/debug/netcoreapp3.1/*'
 
-#Connect-AzAccount
+az login
 
-$resourceGroup = Get-AzResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
+$resourceGroup = az group exists --name $resourceGroupName
 
 if (!$resourceGroup) {    
-  New-AzResourceGroup -Name $resourceGroupName -Location $location
+  az group create --name $resourceGroupName --location $location
 }
 
-New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templatePath -TemplateParameterFile $templateParameterPath
+az group deployment create --resource-group $resourceGroupName --template-file $templatePath --parameters $templateParameterPath
+
+dotnet publish $functionsPath
+Compress-Archive -Path $publishPath -DestinationPath ./function.zip
+
+az functionapp deployment source config-zip -g $resourceGroupName -n 'az204functions123' --src './function.zip'
+
+az group deployment create --resource-group $resourceGroupName --template-file $logicApptemplatePath --parameters $logicAppParameterPath
+
