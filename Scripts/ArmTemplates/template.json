@@ -350,53 +350,7 @@
       ],
       "properties": {
         "name": "[parameters('functionsName')]",
-        "siteConfig": {
-          "appSettings": [
-            {
-              "name": "AzureWebJobsStorage",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(parameters('storageAccountName'),'2015-05-01-preview').key1)]"
-            },
-            {
-              "name": "databaseName",
-              "value": "[parameters('databaseName')]"
-            },
-            {
-              "name": "inputCollection",
-              "value": "Coffees"
-            },
-            {
-              "name": "ordersCollection",
-              "value": "Orders"
-            },
-            {
-              "name": "outputCollectionBrewing",
-              "value": "CoffeesBrewing"
-            },
-            {
-              "name": "outputCollectionOrigin",
-              "value": "CoffeesOrigin"
-            },
-            {
-              "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(parameters('storageAccountName'),'2015-05-01-preview').key1)]"
-            },
-            {
-              "name": "WEBSITE_CONTENTSHARE",
-              "value": "[toLower(parameters('functionsName'))]"
-            },
-            {
-              "name": "WEBSITE_RUN_FROM_PACKAGE",
-              "value": "1"
-            },
-            {
-              "name": "FUNCTIONS_WORKER_RUNTIME",
-              "value": "dotnet"
-            },
-            {
-              "name": "FUNCTIONS_EXTENSION_VERSION",
-              "value": "~3"
-            }
-          ]
+        "siteConfig": {          
         },
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('functionsServicePlanName'))]",
         "clientAffinityEnabled": false
@@ -414,7 +368,16 @@
 
             "FUNCTIONS_EXTENSION_VERSION": "~3",
             "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-            "[variables('connectionStringSettingName')]": "[concat('@Microsoft.KeyVault(SecretUri=', reference( resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), variables('connectionStringSettingName')), '2019-09-01', 'Full').properties.secretUriWithVersion, ')')]"
+            "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING" : "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(parameters('storageAccountName'),'2015-05-01-preview').key1)]",
+            "WEBSITE_CONTENTSHARE" : "[toLower(parameters('functionsName'))]",
+            "WEBSITE_RUN_FROM_PACKAGE" : "1",            
+            "[variables('connectionStringSettingName')]": "[concat('@Microsoft.KeyVault(SecretUri=', reference( resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), variables('connectionStringSettingName')), '2019-09-01', 'Full').properties.secretUriWithVersion, ')')]",
+            "AzureWebJobsStorage" : "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(parameters('storageAccountName'),'2015-05-01-preview').key1)]",
+            "databaseName": "[parameters('databaseName')]",
+            "inputCollection" :"Coffees",
+            "ordersCollection" : "Orders",
+            "outputCollectionBrewing" :"CoffeesBrewing",
+            "outputCollectionOrigin" : "CoffeesOrigin"
           }
         }
       ]

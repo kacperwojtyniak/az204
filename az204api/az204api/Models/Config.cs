@@ -9,6 +9,6 @@ namespace az204api.Models
     {
         public string BlobUrl { get; set; }
         public string KeyVaultUrl { get; set; }
-        public string CosmosDbConnString { get; set; }
+        public string ConnectionString { get; set; }
     }
 }

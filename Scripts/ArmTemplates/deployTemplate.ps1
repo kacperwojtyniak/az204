@@ -41,7 +41,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFil
 
 #Build azure functions, zip and deploy
 dotnet publish $functionsPath
-Compress-Archive -Path $publishPath -DestinationPath ./function.zip
+Compress-Archive -Path $publishPath -DestinationPath ./function.zip -Force
 
 az functionapp deployment source config-zip -g $resourceGroupName -n 'az204functions123' --src './function.zip'
 

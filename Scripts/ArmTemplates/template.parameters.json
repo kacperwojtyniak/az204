@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {       
         "kvName": {
-            "value": "az204kv12745583"
+            "value": "az204kvfinal"
         },
         "cosmosDbAccountName": {
             "value": "az204db123"
         },
         "databaseName": {
-            "value": "az204"
+            "value": "Az204"
         },
         "storageAccountName": {
             "value": "az204storage123"
