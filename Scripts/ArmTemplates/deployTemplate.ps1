@@ -15,7 +15,7 @@ if (!(Get-AzResourceGroup -Name $resourceGroupName)) {
   New-AzResourceGroup -Name $resourceGroupName -Location $location
 }
 
-if(!(Get-AzResourceGroup -Name $acrResourceGroupName)) {
+if (!(Get-AzResourceGroup -Name $acrResourceGroupName)) {
   New-AzResourceGroup -Name $acrResourceGroupName -Location $location
 }
 
@@ -31,13 +31,14 @@ docker build -f ..\..\az204api\az204api\Dockerfile -t $imageName ..\..\az204api
 docker push $imageName
 
 
-
+$setOrderStatusFunction = Get-Content '.\setOrderStatusFunction.js' -Raw
 #Deploy main resource group
 New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templatePath -TemplateParameterFile $templateParameterPath `
--acrUserName $creds.Username `
--acrPassword $creds.Password `
--imageName $imageName `
--acrServerName $registry.LoginServer
+  -acrUserName $creds.Username `
+  -acrPassword $creds.Password `
+  -imageName $imageName `
+  -acrServerName $registry.LoginServer `
+  -setOrderStatusFunction $setOrderStatusFunction
 
 #Build azure functions, zip and deploy
 dotnet publish $functionsPath
