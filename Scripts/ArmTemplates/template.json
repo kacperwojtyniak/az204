@@ -299,7 +299,7 @@
           ],
           "properties": {
             "resource": {
-              "id": "myStoredProcedure",
+              "id": "setOrderStatus",
               "body": "[parameters('setOrderStatusFunction')]"
             }
           }
