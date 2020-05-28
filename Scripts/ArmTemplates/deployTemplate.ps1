@@ -11,11 +11,11 @@ $publishPath = $functionsPath + '/bin/debug/netcoreapp3.1/*'
 
 Connect-AzAccount
 
-if (!(Get-AzResourceGroup -Name $resourceGroupName)) {    
+if (!(Get-AzResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue)) {    
   New-AzResourceGroup -Name $resourceGroupName -Location $location
 }
 
-if (!(Get-AzResourceGroup -Name $acrResourceGroupName)) {
+if (!(Get-AzResourceGroup -Name $acrResourceGroupName -ErrorAction SilentlyContinue)) {
   New-AzResourceGroup -Name $acrResourceGroupName -Location $location
 }
 
