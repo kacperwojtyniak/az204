@@ -111,6 +111,7 @@
           "id": "[parameters('databaseName')]"
         },
         "options": {
+          "throughput": 400
         }
       }
     },
