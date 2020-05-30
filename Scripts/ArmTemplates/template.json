@@ -525,7 +525,13 @@
                 {
                   "port": 80
                 }
-              ]
+              ],
+              "environmentVariables": [
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('Microsoft.Insights/components', parameters('insightsName')), '2015-05-01').InstrumentationKey]"              
+            }
+          ]
             }
           }
         ],
