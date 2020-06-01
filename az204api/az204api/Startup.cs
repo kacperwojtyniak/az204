@@ -44,7 +44,7 @@ namespace az204api
             {                
                 var options = new CosmosClientOptions();
                 options.SerializerOptions = new CosmosSerializationOptions() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase };
-                var client = new CosmosClient(tempConfig.CosmosDbConnString, options);
+                var client = new CosmosClient(tempConfig.ConnectionString, options);
                 return client;
             });
             services.AddTransient(blibClient =>
