@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using az204api.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureKeyVault;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -27,7 +28,7 @@ namespace az204api
                 {
                     var localConfig = config.Build();                    
                     var vaultUrl = localConfig.GetValue<string>(nameof(Config.KeyVaultUrl));
-                    config.AddAzureKeyVault(vaultUrl);
+                    config.AddAzureKeyVault(new AzureKeyVaultConfigurationOptions(vaultUrl) { ReloadInterval = TimeSpan.FromMinutes(5) });
                 });
     }
 }

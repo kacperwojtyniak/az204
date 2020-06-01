@@ -56,6 +56,14 @@ namespace az204api
             {
                 options.MemoryBufferThreshold = int.MaxValue;
             });
+
+            services.AddHttpClient(Constants.EVENT_GRID_CLIENT, client =>
+            {
+                var conf = new Config();
+                Configuration.Bind(conf);
+                client.BaseAddress = new Uri(conf.EventGridUrl);
+                client.DefaultRequestHeaders.Add("aeg-sas-key", conf.EventGridKey);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
