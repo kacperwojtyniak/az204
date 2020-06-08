@@ -64,6 +64,15 @@ namespace az204api
                 client.BaseAddress = new Uri(conf.EventGridUrl);
                 client.DefaultRequestHeaders.Add("aeg-sas-key", conf.EventGridKey);
             });
+
+            services.AddTransient<Microsoft.Azure.ServiceBus.QueueClient>(_ =>
+            {
+                var connectionString = this.Configuration.GetValue<string>(nameof(Config.ServiceBusConnectionString));
+                var connectionStringBuilder = new Microsoft.Azure.ServiceBus.ServiceBusConnectionStringBuilder(connectionString);
+                connectionStringBuilder.EntityPath = "firstqueue";
+
+                return new Microsoft.Azure.ServiceBus.QueueClient(connectionStringBuilder);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
