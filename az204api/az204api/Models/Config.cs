@@ -14,5 +14,6 @@ namespace az204api.Models
         public string EventGridKey { get; set; }
         public string SecretKey { get; set; }
         public string EventGridUrl { get; set; }
+        public string ServiceBusConnectionString { get; set; }
     }
 }
