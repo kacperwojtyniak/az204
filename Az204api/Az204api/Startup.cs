@@ -1,3 +1,4 @@
+using Az204api.HostedServices;
 using Az204api.Models;
 using Az204api.Telemetry;
 using Azure.Identity;
@@ -5,7 +6,6 @@ using Azure.Storage.Blobs;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
@@ -41,14 +41,14 @@ namespace Az204api
             services.AddSingleton<ITelemetryInitializer, TelemetryInitializer>();
             services.AddHealthChecks();
             services.AddSingleton<CosmosClient>(service =>
-            {                
+            {
                 var options = new CosmosClientOptions();
                 options.SerializerOptions = new CosmosSerializationOptions() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase };
                 var client = new CosmosClient(tempConfig.ConnectionString, options);
                 return client;
             });
             services.AddTransient(blibClient =>
-            {               
+            {
                 return new BlobServiceClient(new Uri(tempConfig.BlobUrl), new DefaultAzureCredential());
             });
 
