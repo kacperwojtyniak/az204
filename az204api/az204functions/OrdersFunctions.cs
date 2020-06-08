@@ -1,4 +1,4 @@
-using az204functions.Models;
+using Az204functions.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -15,7 +15,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace az204functions
+namespace Az204functions
 {
     public class OrdersFunctions
     {

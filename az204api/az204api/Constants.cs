@@ -1,4 +1,4 @@
-﻿namespace az204api
+﻿namespace Az204api
 {
     public static class Constants
     {

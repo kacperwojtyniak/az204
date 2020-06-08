@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace az204functions
+namespace Az204functions
 {
     public class CopyFunctions
     {

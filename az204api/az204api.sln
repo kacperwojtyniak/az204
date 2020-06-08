@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "az204api", "az204api\az204api.csproj", "{18861B4C-5B52-4D8F-961A-F037C56ED3AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Az204api", "Az204api\Az204api.csproj", "{18861B4C-5B52-4D8F-961A-F037C56ED3AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "az204functions", "az204functions\az204functions.csproj", "{94344CE7-E0DE-4802-81C1-146A7EE77A35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Az204functions", "Az204functions\Az204functions.csproj", "{94344CE7-E0DE-4802-81C1-146A7EE77A35}"
 EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "LogicApp", "LogicApp\LogicApp.deployproj", "{828303E3-FA0B-415B-8E66-136B0C549E3B}"
 EndProject

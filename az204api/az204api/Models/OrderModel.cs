@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace az204api.Models
+namespace Az204api.Models
 {
     public class OrderModel : Document
     {        

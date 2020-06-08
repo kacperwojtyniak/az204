@@ -1,4 +1,4 @@
-﻿namespace az204api.Models
+﻿namespace Az204api.Models
 {
     public enum OrderStatus
     {

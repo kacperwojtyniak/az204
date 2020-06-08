@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace az204api.Telemetry
+namespace Az204api.Telemetry
 {
     public class TelemetryInitializer : ITelemetryInitializer
     {

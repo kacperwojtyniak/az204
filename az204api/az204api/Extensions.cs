@@ -1,4 +1,4 @@
-﻿using az204api.Models;
+﻿using Az204api.Models;
 using Microsoft.Azure.Cosmos;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace az204api
+namespace Az204api
 {
     public static class Extensions
     {

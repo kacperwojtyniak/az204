@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["az204api/az204api.csproj", "az204api/"]
-RUN dotnet restore "az204api/az204api.csproj"
+COPY ["Az204api/Az204api.csproj", "Az204api/"]
+RUN dotnet restore "Az204api/Az204api.csproj"
 COPY . .
-WORKDIR "/src/az204api"
-RUN dotnet build "az204api.csproj" -c Release -o /app/build
+WORKDIR "/src/Az204api"
+RUN dotnet build "Az204api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "az204api.csproj" -c Release -o /app/publish
+RUN dotnet publish "Az204api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "az204api.dll"]
+ENTRYPOINT ["dotnet", "Az204api.dll"]

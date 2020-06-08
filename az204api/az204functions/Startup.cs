@@ -1,11 +1,11 @@
-﻿using az204functions.Models;
+﻿using Az204functions.Models;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-[assembly: FunctionsStartup(typeof(az204functions.Startup))]
-namespace az204functions
+[assembly: FunctionsStartup(typeof(Az204functions.Startup))]
+namespace Az204functions
 {
     public class Startup : FunctionsStartup
     {

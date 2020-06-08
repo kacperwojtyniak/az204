@@ -1,13 +1,13 @@
-﻿using az204api.Models;
+﻿using Az204api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using static az204api.Constants;
+using static Az204api.Constants;
 
-namespace az204api.Controllers
+namespace Az204api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace az204api.Models
+namespace Az204api.Models
 {
     public class QueryResult
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using az204api.Models;
+using Az204api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.ServiceBus;
@@ -10,7 +10,7 @@ using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace az204api.Controllers
+namespace Az204api.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

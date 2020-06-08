@@ -1,5 +1,5 @@
-using az204api.Models;
-using az204api.Telemetry;
+using Az204api.Models;
+using Az204api.Telemetry;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -14,7 +14,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Text.Json;
 
-namespace az204api
+namespace Az204api
 {
     public class Startup
     {

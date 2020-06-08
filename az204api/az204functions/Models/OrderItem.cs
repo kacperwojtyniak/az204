@@ -1,4 +1,4 @@
-﻿namespace az204functions.Models
+﻿namespace Az204functions.Models
 {
     public class OrderItem
     {

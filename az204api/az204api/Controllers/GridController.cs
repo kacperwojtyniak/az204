@@ -1,5 +1,5 @@
-﻿using az204api;
-using az204api.Models;
+﻿using Az204api;
+using Az204api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Logging;

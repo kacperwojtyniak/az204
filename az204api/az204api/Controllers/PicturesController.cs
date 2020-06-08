@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using az204api.Models;
+using Az204api.Models;
 using Azure.Identity;
 using Azure.Storage;
 using Azure.Storage.Blobs;
@@ -12,9 +12,9 @@ using Azure.Storage.Blobs.Specialized;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
-using static az204api.Constants;
+using static Az204api.Constants;
 
-namespace az204api.Controllers
+namespace Az204api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

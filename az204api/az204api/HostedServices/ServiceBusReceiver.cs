@@ -1,4 +1,4 @@
-﻿using az204api.Models;
+﻿using Az204api.Models;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -7,7 +7,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace az204api.HostedServices
+namespace Az204api.HostedServices
 {
     public class ServiceBusReceiver : IHostedService
     {

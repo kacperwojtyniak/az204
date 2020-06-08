@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace az204functions.Models
+namespace Az204functions.Models
 {
     public class OrderModel
     {
