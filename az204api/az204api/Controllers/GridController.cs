@@ -15,19 +15,15 @@ namespace AllInOneApi.Controllers
     [Route("[controller]/[action]")]
     public class GridController : ControllerBase
     {
-
-        private const string TABLE_NAME = "apitable";
         private readonly ILogger<GridController> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly string _eventGridKey;
         private readonly string _secretKey;
 
-        public GridController(ILogger<GridController> logger, IOptionsMonitor<Config> configuration, IHttpClientFactory httpClientFactory)
+        public GridController(ILogger<GridController> logger, IOptions<Config> configuration, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
-            _eventGridKey = configuration.CurrentValue.EventGridKey;
-            _secretKey = configuration.CurrentValue.SecretKey;
+            _secretKey = configuration.Value.SecretKey;
         }
 
 
