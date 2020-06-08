@@ -1,0 +1,35 @@
+V1 one container, partitioned on /roastery, not providing partition, 15 documents
+Get coffee by ID: 2,89
+Get coffees from given roaster: 2,93
+Get for brewingMethod: 3,26
+Get by origin: 3,01
+
+V1 one container, partitioned on /roastery, not providing partition, 183 documents
+Get coffee by ID: 2,89
+Get coffees from given roaster: 3,18
+Get for brewingMethod: 5,44
+Get by origin: 3,8
+
+V1 one container, partitioned on /roastery, not providing partition, 4023 documents
+Get coffee by ID: 2,89
+Get coffees from given roaster: 3,18
+Get for brewingMethod: 44,3 - OPTIMISE
+Get by origin: 23,68 - OPTIMISE
+Get distinct roasters: 96,59 - OPTIMISE
+
+V1 one container, partitioned on /roastery, select partition, 4023 documents
+Get coffee by ID: 2,89
+Get coffees from given roaster: 3,18
+Get for brewingMethod: 3,22
+Get by origin: 3,05
+
+--------------------------------------------------------------------------------------------
+V2
+Two containers
+Coffees partitionKey: /roastery
+CoffeesBrewing partitionKey: /brewingMethod
+
+Get coffee by ID: 2,89
+Get coffees from given roaster: 3,18
+Get for brewingMethod: 44,97 - still the same charge. Turns out my data set is waaaay too small. 
+Get by origin: 3,05

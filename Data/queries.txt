@@ -1,0 +1,20 @@
+Count documents SELECT VALUE COUNT(1) FROM c
+
+
+ORDER COFFEES
+{
+  "coffees": [
+    {
+      "id": "db5cc298-3b4e-4d93-84ec-efa96c5173f4",
+      "quantity": 2
+    },
+ {
+      "id": "39c20d8b-a54c-4872-a0c8-0f21d775e4cf",
+      "quantity": 1
+    },
+ {
+      "id": "bef4c88f-49b3-4947-a875-91e8244adbc9",
+      "quantity": 3
+    }
+  ]
+}

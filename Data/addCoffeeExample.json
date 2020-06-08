@@ -1,0 +1,168 @@
+[
+    {
+        "name":"Peru Roberto Perales Perez",
+        "roastery": "Hayb",
+        "origin": "Peru",
+        "region": "El Paraiso",
+        "altitudeMin": 1950,
+        "altitudeMax": 2000,
+        "process": "Red Honey",
+        "brewingMethod": "filter",
+        "unitPrice": 51
+    },
+    {
+        "name":"Nicaragua Nueva Segovia La Estrella",
+        "roastery": "Populus",
+        "origin": "Nicaragua",
+        "region": "Nueva Segovia",
+        "altitudeMin": 0,
+        "altitudeMax": 0,
+        "process": "Washed",
+        "brewingMethod": "espresso",
+        "unitPrice": 49
+    },
+    {
+        "name": "Ethiopia Uraga Natural",
+        "roastery": "Five Elephant",
+        "origin": "Ethiopia",
+        "region": "Uraga, Oriomia",
+        "altitudeMin": 2250,
+        "altitudeMax": 2300,
+        "process": "Natural",
+        "brewingMethod": "filter",
+        "unitPrice": 47
+    },
+    {
+        "name" : "Honduras Caballero Catuai",
+        "roastery": "Tim Wendelboe",
+        "origin": "Honduras",
+        "region": "Chinacla, La Paz",
+        "altitudeMin": 1500,
+        "altitudeMax": 1600,
+        "process": "Washed",
+        "brewingMethod": "filer",
+        "unitPrice": 43
+    },
+    {
+        "name":"Ethiopia Ana Sora Washed",
+        "roastery": "3fe",
+        "origin": "Ethiopia",
+        "region": "Guji",
+        "altitudeMin": 0,
+        "altitudeMax": 0,
+        "process": "Washed",
+        "brewingMethod": "all",
+        "unitPrice": 44
+    },
+    {
+        "name":"Etiopia Ora Filter",
+        "roastery": "SIMPLo",
+        "origin": "Ethiopia",
+        "region": "Sidamo",
+        "altitudeMin": 1600,
+        "altitudeMax": 2000,
+        "process": "Washed",
+        "brewingMethod": "filter",
+        "unitPrice": 46
+    },
+    {
+        "name" : "FIL Peru Junin Guillermo Cardenas",
+        "roastery": "Caffenation",
+        "origin": "Peru",
+        "region": "N/A",
+        "altitudeMin": 2200,
+        "altitudeMax": 2200,
+        "process": "N/A",
+        "brewingMethod": "filter",
+        "unitPrice": 54
+    },
+    {
+        "name" : "El Salvador Ismael Recinos",
+        "roastery": "Casino Mocca",
+        "origin": "Salvador",
+        "region": "N/A",
+        "altitudeMin": 0,
+        "altitudeMax": 0,
+        "process": "Honey",
+        "brewingMethod": "filter",
+        "unitPrice": 38
+    },
+    {
+        "name" : "Gwatemala Atitlan Ija'tz de la Gente",
+        "roastery": "Coffeelab",
+        "origin": "Guatemala",
+        "region": "Atitlan",
+        "altitudeMin": 1500,
+        "altitudeMax": 1900,
+        "process": "Washed",
+        "brewingMethod": "espresso",
+        "unitPrice": 60
+    },
+    {
+        "name" : "Burundi Kibingo Natural",
+        "roastery": "Diamonds Roastery",
+        "origin": "Burundi",
+        "region": "Kayanza",
+        "altitudeMin": 1863,
+        "altitudeMax": 1863,
+        "process": "Natural",
+        "brewingMethod": "filter",
+        "unitPrice": 52
+    },
+    {
+        "name":"Nicaragua Don Isidro",
+        "roastery": "Diamonds Roastery",
+        "origin": "Nicaragua",
+        "region": "Jinotega",
+        "altitudeMin": 1500,
+        "altitudeMax": 1500,
+        "process": "Washed",
+        "brewingMethod": "filter",
+        "unitPrice": 42
+    },
+    {
+        "name":"Rwanda Kageyo Lot 080",
+        "roastery": "Figa Coffee",
+        "origin": "Rwanda",
+        "region": "Western Province",
+        "altitudeMin": 1800,
+        "altitudeMax": 2000,
+        "process": "Washed",
+        "brewingMethod": "filter",
+        "unitPrice": 47
+    },
+    {
+        "name":"Rwanda Kirambo Lot 435",
+        "roastery": "Figa Coffee",
+        "origin": "Rwanda",
+        "region": "Nyamasheke",
+        "altitudeMin": 1545,
+        "altitudeMax": 1545,
+        "process": "Natural",
+        "brewingMethod": "filter",
+        "unitPrice": 55
+    },
+    {
+        "name" : "Ethiopia Banko Gotiti",
+        "roastery": "Gardelli Speciality Coffees",
+        "origin": "Ethiopia",
+        "region": "Yirgacheffe",
+        "altitudeMin": 1900,
+        "altitudeMax": 2100,
+        "process": "Washed",
+        "brewingMethod": "all",
+        "unitPrice": 48
+    },
+    {
+        "name":"Tanzania Iyula",
+        "roastery": "Java Coffee",
+        "origin": "Tanzania",
+        "region": "Songwe, Mbozi",
+        "altitudeMin": 1702,
+        "altitudeMax": 1702,
+        "process": "Washed",
+        "brewingMethod": "filter",
+        "unitPrice": 50
+    }
+    
+]

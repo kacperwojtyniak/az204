@@ -1,0 +1,189 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "cosmosDbAccountName": {
+      "type": "String"
+    },
+    "functionsName": {
+      "type": "String"
+    },
+    "logicAppName": {
+      "type": "string",
+      "defaultValue": "az204logic123"
+    },
+    "documentDbConnection": {
+      "defaultValue": "documentdb",
+      "type": "String"
+    }
+  },
+  "variables": {
+    "documentdbConnectionId": "[concat('/subscriptions/82b5bb8a-2ea2-454a-80f5-cbada80b910c/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/',parameters('documentDbConnection'))]",
+    "functionsConnectionId": "[concat('/subscriptions/82b5bb8a-2ea2-454a-80f5-cbada80b910c/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/sites/',parameters('functionsName'))]"
+  },
+  "resources": [
+    {
+      "type": "MICROSOFT.WEB/CONNECTIONS",
+      "apiVersion": "2018-07-01-preview",
+      "name": "[parameters('documentDbConnection')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "api": {
+          "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', parameters('documentDbConnection'))]"
+        },
+        "displayName": "[parameters('documentDbConnection')]",
+        "parameterValues": {
+          "databaseAccount": "[parameters('cosmosDbAccountName')]",
+          "accessKey": "[listKeys(concat('Microsoft.DocumentDB/databaseAccounts/',parameters('cosmosDbAccountName')), '2020-03-01').primaryMasterKey]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "name": "[parameters('logicAppName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/connections', parameters('documentDbConnection'))]"
+      ],
+      "tags": {
+        "displayName": "LogicApp"
+      },
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "$connections": {
+              "defaultValue": {
+              },
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                  "properties": {
+                    "date": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "totalAmount": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "actions": {
+            "Condition": {
+              "actions": {
+                "RequestApproval": {
+                  "runAfter": {
+                  },
+                  "type": "Function",
+                  "inputs": {
+                    "function": {
+                      "id": "[concat(variables('functionsConnectionId'), '/functions/RequestApproval')]"
+                    },
+                    "queries": {
+                      "date": "@triggerBody()?['date']",
+                      "id": "@triggerBody()?['id']"
+                    }
+                  }
+                },
+                "Response": {
+                  "runAfter": {
+                    "RequestApproval": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Response",
+                  "kind": "Http",
+                  "inputs": {
+                    "body": "@body('RequestApproval')",
+                    "statusCode": "@outputs('RequestApproval')['statusCode']"
+                  }
+                }
+              },
+              "runAfter": {
+              },
+              "else": {
+                "actions": {
+                  "Execute_stored_procedure": {
+                    "runAfter": {
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                      "body": "[[\"@{triggerBody()?['id']}\",1]",
+                      "headers": {
+                        "x-ms-documentdb-raw-partitionkey": "\"@{triggerBody()?['date']}\""
+                      },
+                      "host": {
+                        "connection": {
+                          "name": "@parameters('$connections')['documentdb']['connectionId']"
+                        }
+                      },
+                      "method": "post",
+                      "path": "/dbs/@{encodeURIComponent('Az204')}/colls/@{encodeURIComponent('Orders')}/sprocs/@{encodeURIComponent('setOrderStatus')}"
+                    }
+                  },
+                  "Response_2": {
+                    "runAfter": {
+                      "Execute_stored_procedure": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "Response",
+                    "kind": "Http",
+                    "inputs": {
+                      "body": "@body('Execute_stored_procedure')",
+                      "statusCode": 200
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "or": [
+                  {
+                    "greater": [
+                      "@triggerBody()?['totalAmount']",
+                      1000
+                    ]
+                  }
+                ]
+              },
+              "type": "If"
+            }
+          },
+          "outputs": {
+          }
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "documentdb": {
+                "connectionId": "[variables('documentdbConnectionId')]",
+                "connectionName": "[parameters('documentDbConnection')]",
+                "id": "[concat('/subscriptions/82b5bb8a-2ea2-454a-80f5-cbada80b910c/providers/Microsoft.Web/locations/',resourceGroup().location, '/managedApis/',parameters('documentDbConnection'))]"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
